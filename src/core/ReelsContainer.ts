@@ -1,25 +1,26 @@
 import * as PIXI from 'pixi.js';
 import Reel from './Reel';
 
-const REEL_OFFSET_LEFT = 60;
-const NUMBER_OF_REELS = 3;
-
 export default class ReelsContainer {
     public readonly reels: Array<Reel> = [];
     public readonly container: PIXI.Container;
+    public NUMBER_OF_REELS = 3;
+    public NUMBER_OF_ROWS = 3;
+    public REEL_WIDTH = 140;
+    public ROW_HEIGHT = 80;
+    public REEL_HEIGHT = this.ROW_HEIGHT * this.NUMBER_OF_ROWS;
 
     constructor(app: PIXI.Application, assets: any) {
         
         this.container = new PIXI.Container();
 
-        for (let i = 0; i < NUMBER_OF_REELS; i++) {
-            const reel = new Reel(app, i, assets);
+        //this.container.width = reelContainerWidth;
+
+        for (let i = 0; i < this.NUMBER_OF_REELS; i++) {
+            const reel = new Reel(app, assets, i, this);
             this.reels.push(reel);
             this.container.addChild(reel.container);
         }
-
-        this.container.x = REEL_OFFSET_LEFT;
-        this.container.y = -50;
     }
 
     async spin() {
@@ -30,6 +31,7 @@ export default class ReelsContainer {
         const reelsToSpin = [...this.reels];
         
         for await (let value of this.infiniteSpinning(reelsToSpin)) {
+            
             const shiftingWaitTime = (this.reels.length - reelsToSpin.length + 1) * shiftingDelay;
             
             if (Date.now() >= start + shiftingWaitTime) {
@@ -41,7 +43,7 @@ export default class ReelsContainer {
 
         // reel.sprites[2] - Middle visible symbol of the reel
         //
-        return this.checkForWin(this.reels.map(reel => reel.sprites[2]));
+        return this.checkForWin(this.reels.map(reel => reel.slots[2].getChildAt(0) as PIXI.Sprite));
     }
 
     private async* infiniteSpinning(reelsToSpin: Array<Reel>) {
@@ -64,7 +66,7 @@ export default class ReelsContainer {
 
     private blessRNG() {
         this.reels.forEach(reel => {
-            reel.sprites[0].texture = reel.textures[Math.floor(Math.random() * reel.textures.length)];
+            (reel.slots[0].getChildAt(0) as PIXI.Sprite).texture = reel.textures[Math.floor(Math.random() * reel.textures.length)];
         });
     }
 }

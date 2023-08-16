@@ -8,7 +8,7 @@ import VictoryScreen from './VictoryScreen';
 export default class Game {
     public app: PIXI.Application;
     private playBtn: PlayButton | undefined;
-    private reelsContainer: ReelsContainer | undefined;
+    private reels: ReelsContainer | undefined;
     private scoreboard: Scoreboard | undefined;
     private victoryScreen: VictoryScreen | undefined;
     private assets:any;
@@ -18,6 +18,7 @@ export default class Game {
             resizeTo: container,
             backgroundColor: 0x1099bb,
         });
+
         container.appendChild(this.app.view as HTMLCanvasElement);
 
         PIXI.Assets.addBundle('symbols', {
@@ -56,8 +57,44 @@ export default class Game {
     }
 
     private createReels() {
-        this.reelsContainer = new ReelsContainer(this.app, this.assets);
-        this.app.stage.addChild(this.reelsContainer.container);
+        this.reels = new ReelsContainer(this.app, this.assets);  
+        
+        const reelsWidth = this.reels.NUMBER_OF_REELS * this.reels.REEL_WIDTH
+        const reelsHeight = this.reels.NUMBER_OF_ROWS * this.reels.ROW_HEIGHT
+        this.reels.container.x = this.app.screen.width / 2 - reelsWidth / 2;
+        this.reels.container.y = 100;
+
+        let reelTop = new PIXI.Sprite(PIXI.Texture.WHITE);
+        reelTop.alpha = 0.9;
+        reelTop.width = reelsWidth;
+        reelTop.height = this.reels.ROW_HEIGHT;
+        reelTop.x = this.reels.container.x;
+        reelTop.y = this.reels.container.y - reelTop.height;
+
+        let reelBottom = new PIXI.Sprite(PIXI.Texture.WHITE);
+        reelBottom.alpha = 0.9;
+        reelBottom.width = reelsWidth;
+        reelBottom.height = this.reels.ROW_HEIGHT;
+        reelBottom.x = this.reels.container.x;
+        reelBottom.y = this.reels.container.y + reelsHeight;
+
+        this.reelBg(0, this.reels)
+        this.reelBg(2, this.reels)
+        
+        this.app.stage.addChild(this.reels.container);
+        this.app.stage.addChild(reelTop);
+        this.app.stage.addChild(reelBottom);        
+
+    }
+
+    private reelBg(position: number, reels: ReelsContainer){
+        let reelBgBlink = new PIXI.Sprite(PIXI.Texture.WHITE);
+        reelBgBlink.width = reels.REEL_WIDTH;
+        reelBgBlink.height = reels.REEL_HEIGHT;
+        reelBgBlink.x = reels.container.x + (reelBgBlink.width * position);
+        reelBgBlink.y = reels.container.y;
+        reelBgBlink.alpha = 0.5;
+        this.app.stage.addChild(reelBgBlink);
     }
 
     private createScoreboard() {
@@ -74,7 +111,7 @@ export default class Game {
     handleStart() {
         this.scoreboard?.decrement();
         this.playBtn?.setDisabled();
-        this.reelsContainer?.spin()
+        this.reels?.spin()
             .then(this.processSpinResult.bind(this));
     }
 

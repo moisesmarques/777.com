@@ -1,21 +1,18 @@
 import * as PIXI from 'pixi.js';
-
-const REEL_WIDTH = 120;
-const REEL_OFFSET_BETWEEN = 10;
-const NUMBER_OF_ROWS = 3;
+import ReelsContainer from './ReelsContainer';
 
 export default class Reel {
     
     public readonly container: PIXI.Container;
     public readonly textures: Array<PIXI.Texture>;
-    public sprites: Array<PIXI.Sprite> = [];
-    private readonly appHeight: number;
+    public slots: Array<PIXI.Container> = [];
     private readonly ticker: PIXI.Ticker;
-
-    constructor(app: PIXI.Application, position: number, assets: any) {
-        this.appHeight = app.screen.height;
+    private readonly reelsContainer: ReelsContainer;
+    
+    constructor(app: PIXI.Application, assets: any, position: number, reelsContainer: ReelsContainer) {
         this.ticker = app.ticker;
-        this.container = new PIXI.Container();
+        this.container = new PIXI.Container()
+
         this.textures = [
             assets.bar,
             assets.bar2x,
@@ -24,48 +21,64 @@ export default class Reel {
             assets.seven,
             assets.berry,
         ];
+        this.reelsContainer = reelsContainer;
+
         this.generate(position);
     }
 
     private generate(position: number) {
-        
-        this.container.x = position * REEL_WIDTH;
+
+        const REEL_WIDTH = this.reelsContainer.REEL_WIDTH;
+        const ROW_HEIGHT = this.reelsContainer.ROW_HEIGHT;
+        const NUMBER_OF_ROWS = this.reelsContainer.NUMBER_OF_ROWS;
 
         for (let i = 0; i < NUMBER_OF_ROWS + 1; i++) {
+
             const symbol = new PIXI.Sprite(this.textures[Math.floor(Math.random() * this.textures.length)]);
-            symbol.scale.set(0.6);
-            const widthDiff = REEL_WIDTH - symbol.width;
-            symbol.x = position * REEL_OFFSET_BETWEEN + widthDiff / 2;
-            const yOffset = (this.appHeight - symbol.height * 3) / 3;
-            const cellHeight = symbol.height + yOffset;
-            const paddingTop = yOffset / 2;
-            symbol.y = (i - 1) * cellHeight + paddingTop;
-            this.sprites.push(symbol);
-            this.container.addChild(symbol);
+            const slot = new PIXI.Container();
+            slot.width = REEL_WIDTH;
+            slot.height = ROW_HEIGHT;
+
+            // put symbol inside of slot and position it in the middle
+            symbol.scale.set(0.5)
+            symbol.anchor.set(0.5);
+            symbol.x = REEL_WIDTH / 2;
+            symbol.y = ROW_HEIGHT / 2;
+            slot.addChild(symbol);
+
+            slot.x =  position * REEL_WIDTH;
+            slot.y = (i - 1) * ROW_HEIGHT;
+            this.slots.push(slot);
+            this.container.addChild(slot);
         }
     }
 
     spinOneTime() {
         let speed = 50;
         let doneRunning = false;
-        let yOffset = (this.appHeight - this.sprites[0].height * 3) / 3 / 2;
+        const REEL_HEIGHT = this.reelsContainer.REEL_HEIGHT;
+        const ROW_HEIGHT = this.reelsContainer.ROW_HEIGHT;
+        const NUMBER_OF_ROWS = this.reelsContainer.NUMBER_OF_ROWS;
+
+        let yOffset = (REEL_HEIGHT - ROW_HEIGHT * NUMBER_OF_ROWS) / NUMBER_OF_ROWS / 2;
 
         return new Promise<void>(resolve => {
             const tick = () => {
-                for (let i = this.sprites.length - 1; i >= 0; i--) {
-                    const symbol = this.sprites[i];
+                for (let i = this.slots.length - 1; i >= 0; i--) {
 
-                    if (symbol.y + speed > this.appHeight + yOffset) {
+                    const slot = this.slots[i];
+
+                    if (slot.y + speed > REEL_HEIGHT + yOffset) {
                         doneRunning = true;
-                        speed = this.appHeight - symbol.y + yOffset;
-                        symbol.y = -(symbol.height + yOffset);
+                        speed = REEL_HEIGHT - slot.y + yOffset;
+                        slot.y = -(ROW_HEIGHT + yOffset);
                     } else {
-                        symbol.y += speed;
+                        slot.y += speed;
                     }
 
                     if (i === 0 && doneRunning) {
-                        let t = this.sprites.pop();
-                        if (t) this.sprites.unshift(t);
+                        let t = this.slots.pop();
+                        if (t) this.slots.unshift(t);
                         this.ticker.remove(tick);
                         resolve();
                     }

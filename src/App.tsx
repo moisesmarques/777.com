@@ -109,7 +109,7 @@ const App: React.FC = () => {
                       flexGrow: 1,
                       minHeight: '100vh',
                       width: 'inherit',
-                      maxWidth: '500px',
+                      maxWidth: '600px',
                     }}>
                       <Routes isAuthenticated={!!userState.token}/>
                   </Box>
