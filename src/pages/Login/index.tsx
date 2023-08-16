@@ -1,11 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { signin } from "../../services/userService";
 import { Box, Button, Container, TextField } from "@mui/material";
 import { UserContext } from "../../App";
-// import logo from '../../assets/logo.png';
+
+const logo = require('../../assets/logo.png')
 
 export type LoginTypeForm = {
   phone: string;
@@ -41,11 +42,26 @@ const Login = () => {
     }
   })
 
+  const phoneMask = (value: string) => {
+    return value
+      .replace(/\D/g, '')
+      .replace(/(\d{2})(\d)/, '($1) $2')
+      .replace(/(\d{5})(\d)/, '$1-$2')
+      .replace(/(-\d{4})\d+?$/, '$1')
+  }
+      
+  const phoneNumber = watch('phone');
+  useEffect(() => {
+    if (phoneNumber) {
+      setValue('phone', phoneMask(phoneNumber));
+    }
+  }, [phoneNumber])
+
     return (
       <Container sx={{width: '400px', mt: 10}}>
         <Box sx={{display: 'flex', flexDirection: 'column'}}>
           <Box sx={{display: 'flex', flexDirection: 'column', mb: 2}}>
-            {/* <img src={logo} alt="Logo" /> */}
+            <img src={logo} alt="Logo" />
           </Box>          
           <h4>Log in</h4>
           <form onSubmit={handleSubmit( data => mutate(data))}>
@@ -59,10 +75,6 @@ const Login = () => {
                       placeholder="(99) 99999-9999"
                       {...register('phone', {
                         required: 'Digite seu número de celular',
-                        pattern: {
-                          value: /^\([1-9]{2}\) [9]{1}[0-9]{4}-[0-9]{4}$/,
-                          message: 'Número de celular inválido',
-                        },
                       })}
                     />
               </Box>
