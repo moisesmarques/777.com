@@ -19,7 +19,7 @@ const Home = () => {
             sx={{display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
-                height: '100vh',
+                height: '100%',
                 width: '100%',
                 }}>
         </Box>            

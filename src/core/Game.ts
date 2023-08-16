@@ -65,14 +65,12 @@ export default class Game {
         this.reels.container.y = 100;
 
         let reelTop = new PIXI.Sprite(PIXI.Texture.WHITE);
-        reelTop.alpha = 0.9;
         reelTop.width = reelsWidth;
         reelTop.height = this.reels.ROW_HEIGHT;
         reelTop.x = this.reels.container.x;
         reelTop.y = this.reels.container.y - reelTop.height;
 
-        let reelBottom = new PIXI.Sprite(PIXI.Texture.WHITE);
-        reelBottom.alpha = 0.9;
+        let reelBottom = new PIXI.Sprite(PIXI.Texture.WHITE);        
         reelBottom.width = reelsWidth;
         reelBottom.height = this.reels.ROW_HEIGHT;
         reelBottom.x = this.reels.container.x;

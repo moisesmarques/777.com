@@ -18,6 +18,7 @@ export default createGlobalStyle`
     -webkit-font-smoothing: antialiased;
     height: 100%;
     width: 100%;
+    min-height: 740px;
   }
 
   body, input, button, textarea {
