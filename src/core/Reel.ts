@@ -40,7 +40,7 @@ export default class Reel {
             slot.height = ROW_HEIGHT;
 
             // put symbol inside of slot and position it in the middle
-            symbol.scale.set(0.5)
+            symbol.scale.set(0.6)
             symbol.anchor.set(0.5);
             symbol.x = REEL_WIDTH / 2;
             symbol.y = ROW_HEIGHT / 2;
@@ -54,7 +54,7 @@ export default class Reel {
     }
 
     spinOneTime() {
-        let speed = 50;
+        let speed = 30;
         let doneRunning = false;
         const REEL_HEIGHT = this.reelsContainer.REEL_HEIGHT;
         const ROW_HEIGHT = this.reelsContainer.ROW_HEIGHT;

@@ -26,9 +26,8 @@ export default class PlayButton {
 
     private init(appWidth: number, appHeight: number) {
         this.sprite.x = (appWidth - this.sprite.width) / 2;
-        this.sprite.y = appHeight - this.sprite.height - 10;
+        this.sprite.y = appHeight - this.sprite.height - 60;
         this.sprite.interactive = true;
-        // this.sprite.buttonMode = true;
         this.sprite.addListener('pointerdown', this.onClick);
     }
 }

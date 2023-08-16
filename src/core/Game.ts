@@ -16,7 +16,6 @@ export default class Game {
     constructor(container: HTMLElement) {
         this.app = new PIXI.Application({
             resizeTo: container,
-            backgroundColor: 0x1099bb,
         });
 
         container.appendChild(this.app.view as HTMLCanvasElement);

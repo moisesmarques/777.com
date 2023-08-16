@@ -1,24 +1,71 @@
 import * as PIXI from 'pixi.js';
 
+const formatMoney = (number: number) => new Intl.NumberFormat('pt-BR', {
+    style: 'decimal',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(number);
+
 export default class Scoreboard {
     public container: PIXI.Container;
     public outOfMoney = false;
-    private winAmountText: PIXI.Text | undefined;
-    private moneyText: PIXI.Text | undefined;
+    private winAmountText: PIXI.Text;
+    private moneyText: PIXI.Text;
+    private betText: PIXI.Text;    
+    private money: number = 100000500;
+    private bet: number = 50000;
     private winAmount: number = 0;
-    private money: number = 100;
-    private bet: number = 5;
 
     constructor(app: PIXI.Application) {
         this.container = new PIXI.Container();
-        this.generate(app.screen.width, app.screen.height);
+
+        const style = new PIXI.TextStyle({
+            fontFamily: 'Arial',
+            fontSize: 18,
+            fill: 'white',
+        });
+
+
+        this.moneyText = new PIXI.Text(`R$ ${formatMoney(this.money)}` , style);
+        this.moneyText.x = 60;
+
+        this.betText = new PIXI.Text(`R$ ${formatMoney(this.bet)}` , style);
+        this.betText.x = 250;
+
+        this.winAmountText = new PIXI.Text(`R$ ${formatMoney(this.winAmount)}` , style);
+        this.winAmountText.x = 440;
+
+        this.container.x = 0;
+        this.container.y = app.screen.height - 200;
+
+        this.container.addChild(this.moneyText, this.betText, this.winAmountText);
+
+        const q1 = new PIXI.Graphics();
+        q1.beginFill(0xffff00);
+        q1.drawRect(0, 0, 24, 24);
+        q1.endFill();
+        q1.x = 30;
+        q1.y = -6;
+
+        const q2 = q1.clone();
+        q2.x = 220;
+        q2.y = -6;
+
+        const q3 = q1.clone();
+        q3.x = 410;
+        q3.y = -6;
+        
+        this.container.addChild(q1);
+        this.container.addChild(q2);
+        this.container.addChild(q3);
+
+
     }
 
     decrement() {
         if (!this.outOfMoney) {
             this.money -= this.bet;
-            if(this.moneyText)
-                this.moneyText.text = `money: $${this.money}`;
+            this.moneyText.text = `R$ ${formatMoney(this.money)}`;
         }
         if (this.money - this.bet < 0) {
             this.outOfMoney = true;
@@ -26,41 +73,14 @@ export default class Scoreboard {
     }
 
     increment() {
-        this.money += this.bet * 2;
-        if(this.moneyText)
-            this.moneyText.text = `money: $${this.money}`;
-        this.winAmount += this.bet;
-        if(this.winAmountText)
-            this.winAmountText.text = `win: $${this.winAmount}`;
-        if (this.outOfMoney) this.outOfMoney = false;
+        this.money += this.bet * 3;
+        this.moneyText.text = `R$ ${formatMoney(this.money)}`;
+
+        this.winAmount += this.bet * 3;
+        this.winAmountText.text = `R$ ${formatMoney(this.winAmount)}`;
+
+        if (this.outOfMoney)
+            this.outOfMoney = false;
     }
 
-    private generate(appWidth: number, appHeight: number) {
-        const style = new PIXI.TextStyle({
-            fontFamily: 'Arial',
-            fontSize: 16,
-            fill: 'yellow',
-        });
-
-        this.moneyText = new PIXI.Text(`money: $${this.money}`, style);
-        this.moneyText.y = 5;
-
-        const betText = new PIXI.Text(`bet: $${this.bet}`, style);
-        betText.y = this.moneyText.height + 10;
-
-        this.winAmountText = new PIXI.Text(`win: $${this.winAmount}`, style);
-        this.winAmountText.y = betText.y + betText.height + 5;
-
-        betText.x = this.moneyText.x = this.winAmountText.x = 10;
-
-        const rect = new PIXI.Graphics();
-        rect.beginFill(0x02474E, 1.0);
-        const rectHeight = this.moneyText.height + betText.height + this.winAmountText.height + 40;
-        rect.drawRect(0, 0, appWidth, rectHeight);
-        rect.endFill();
-
-        this.container.x = 0;
-        this.container.y = appHeight - rectHeight;
-        this.container.addChild(rect, this.moneyText, betText, this.winAmountText);
-    }
 }
