@@ -10,9 +10,9 @@ const Home = () => {
     useEffect(() => {
         if(containerRef.current){
             containerRef.current.innerHTML = ''
-            const game = new Game(containerRef.current)
+            new Game(containerRef.current)
         }
-    }, [])
+    }, [containerRef.current])
 
     return (
         <Box ref={containerRef} 

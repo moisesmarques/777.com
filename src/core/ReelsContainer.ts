@@ -14,7 +14,7 @@ export default class ReelsContainer {
         
         this.container = new PIXI.Container();
 
-        //this.container.width = reelContainerWidth;
+        this.REEL_WIDTH = app.screen.width * 0.8 / this.NUMBER_OF_REELS;
 
         for (let i = 0; i < this.NUMBER_OF_REELS; i++) {
             const reel = new Reel(app, assets, i, this);
@@ -26,7 +26,7 @@ export default class ReelsContainer {
     async spin() {
         // Overall time of spinning = shiftingDelay * this.reels.length
         //
-        const shiftingDelay = 800;
+        const shiftingDelay = 500;
         const start = Date.now();
         const reelsToSpin = [...this.reels];
         

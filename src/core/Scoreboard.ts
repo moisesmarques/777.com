@@ -12,8 +12,8 @@ export default class Scoreboard {
     private winAmountText: PIXI.Text;
     private moneyText: PIXI.Text;
     private betText: PIXI.Text;    
-    private money: number = 100000500;
-    private bet: number = 50000;
+    private money: number = 999999.99;
+    private bet: number = 9.99;
     private winAmount: number = 0;
 
     constructor(app: PIXI.Application) {
@@ -25,40 +25,35 @@ export default class Scoreboard {
             fill: 'white',
         });
 
+        const textMaxSize = 130;
 
         this.moneyText = new PIXI.Text(`R$ ${formatMoney(this.money)}` , style);
-        this.moneyText.x = 60;
+        this.moneyText.anchor.set(0.5, 0)
+        const moneyTextContainer = new PIXI.Container()
+        moneyTextContainer.x = textMaxSize * 0;
+        moneyTextContainer.width = textMaxSize;
+        moneyTextContainer.addChild(this.moneyText);
 
         this.betText = new PIXI.Text(`R$ ${formatMoney(this.bet)}` , style);
-        this.betText.x = 250;
+        this.betText.anchor.set(0.5, 0)
+        const betTextContainer = new PIXI.Container();
+        betTextContainer.x = textMaxSize * 1;
+        betTextContainer.width = textMaxSize;
+        betTextContainer.addChild(this.betText);
 
         this.winAmountText = new PIXI.Text(`R$ ${formatMoney(this.winAmount)}` , style);
-        this.winAmountText.x = 440;
+        this.winAmountText.anchor.set(0.5, 0)
+        const winAmountTextContainer = new PIXI.Container();
+        winAmountTextContainer.x = textMaxSize * 2;
+        winAmountTextContainer.width = textMaxSize;
+        winAmountTextContainer.addChild(this.winAmountText);
 
-        this.container.x = 0;
+        this.container.x = app.screen.width / 2 - textMaxSize;
         this.container.y = app.screen.height - 200;
 
-        this.container.addChild(this.moneyText, this.betText, this.winAmountText);
+        this.container.addChild(moneyTextContainer, betTextContainer, winAmountTextContainer);
 
-        const q1 = new PIXI.Graphics();
-        q1.beginFill(0xffff00);
-        q1.drawRect(0, 0, 24, 24);
-        q1.endFill();
-        q1.x = 30;
-        q1.y = -6;
-
-        const q2 = q1.clone();
-        q2.x = 220;
-        q2.y = -6;
-
-        const q3 = q1.clone();
-        q3.x = 410;
-        q3.y = -6;
-        
-        this.container.addChild(q1);
-        this.container.addChild(q2);
-        this.container.addChild(q3);
-
+       
 
     }
 
