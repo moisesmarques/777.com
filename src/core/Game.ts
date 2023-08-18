@@ -15,7 +15,14 @@ export default class Game {
 
     constructor(container: HTMLElement) {
         this.app = new PIXI.Application({
-            resizeTo: container,
+            resizeTo: container,            
+            eventMode: 'passive',
+            eventFeatures: {
+                move: true,
+                globalMove: false,
+                click: true,
+                wheel: true,
+            }
         });
 
         container.appendChild(this.app.view as HTMLCanvasElement);

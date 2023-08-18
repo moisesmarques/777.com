@@ -16,9 +16,9 @@ type SettingsProps = {
 
 const Settings = ({ showSettings }: SettingsProps) => {
     
-    const userState = useContext(UserContext);
+    const {userState, setUserState} = useContext(UserContext);
     const closeHandler = () => {
-        userState.set({showSettings: false} as any)
+        setUserState({showSettings: false} as any)
     }
 
     const handleLogout = (e: any) => {

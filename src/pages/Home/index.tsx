@@ -7,12 +7,14 @@ const Home = () => {
 
     const containerRef = React.useRef<HTMLDivElement>(null)
 
+    console.log(window.innerWidth)
+
     useEffect(() => {
         if(containerRef.current){
             containerRef.current.innerHTML = ''
             new Game(containerRef.current)
         }
-    }, [containerRef.current])
+    }, [containerRef.current, window.innerWidth])
 
     return (
         <Box ref={containerRef} 
@@ -20,6 +22,7 @@ const Home = () => {
                 flexDirection: 'column',
                 justifyContent: 'center',
                 height: '100%',
+                minHeight: '740px',
                 width: '100%',
                 }}>
         </Box>            

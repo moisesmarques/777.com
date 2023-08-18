@@ -12,20 +12,20 @@ export default class Scoreboard {
     private winAmountText: PIXI.Text;
     private moneyText: PIXI.Text;
     private betText: PIXI.Text;    
-    private money: number = 999999.99;
+    private money: number = 99999.99;
     private bet: number = 9.99;
-    private winAmount: number = 0;
+    private winAmount: number = 99999.99;
 
     constructor(app: PIXI.Application) {
         this.container = new PIXI.Container();
 
         const style = new PIXI.TextStyle({
             fontFamily: 'Arial',
-            fontSize: 18,
+            fontSize: 14,
             fill: 'white',
         });
 
-        const textMaxSize = 130;
+        const textMaxSize = 120;
 
         this.moneyText = new PIXI.Text(`R$ ${formatMoney(this.money)}` , style);
         this.moneyText.anchor.set(0.5, 0)

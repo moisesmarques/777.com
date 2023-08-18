@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useMutation } from '@tanstack/react-query';
 import { signin, signinVerify } from '../../../services/userService';
 import { toast } from 'react-toastify';
-import { UserContext } from '../../../App';
+import { UserContext, UserState } from '../../../App';
 import { Box, Button, Container, TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 const logo = require('../../../assets/logo.png')
@@ -13,16 +13,16 @@ type VerifyForm = {
 }
 
 const VerifyAccount = () => {  
-  const userState = useContext(UserContext);
+  const { userState, setUserState } = useContext(UserContext);
   const navigate = useNavigate();
   
   const { mutate: verifyAccount } = useMutation({
     mutationFn: (values: VerifyForm) => signinVerify({
       phone: userState.phone,
-      code: values.code
+      otp: values.code
     }),
     onSuccess: (data) => {
-      userState.set({ token: data.token } as any)
+      setUserState({ token: data.accessToken } as UserState)
       navigate('/')
     }
   })
@@ -32,7 +32,6 @@ const VerifyAccount = () => {
       return signin({ phone: userState.phone})
     },
     onSuccess: (data) => {
-      userState.set({ token: data.token } as any)
       toast.info('Código reenviado com sucesso')
     }
   })
@@ -46,13 +45,7 @@ const VerifyAccount = () => {
     mode: 'onSubmit',
     reValidateMode: 'onBlur',
   });
-
-  const otpValue = watch('code');
-
-  useEffect(() => {
-    // setValue("otp", masks.otp(otpValue || ''))
-  }, [otpValue]);
-
+  
   return (
     <Container sx={{width: '400px', mt: 10}}>
       <Box sx={{display: 'flex', flexDirection: 'column'}}>

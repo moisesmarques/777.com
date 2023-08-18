@@ -4,9 +4,10 @@ import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { signin } from "../../services/userService";
 import { Box, Button, Container, TextField } from "@mui/material";
-import { UserContext } from "../../App";
+import { UserContext, UserState } from "../../App";
 
 const logo = require('../../assets/logo.png')
+const countryCode = '+55'
 
 export type LoginTypeForm = {
   phone: string;
@@ -14,8 +15,8 @@ export type LoginTypeForm = {
 
 const Login = () => {
   const navigate = useNavigate();
-  const userState = useContext(UserContext);
-
+  const {userState, setUserState} = useContext(UserContext);
+  
   const { 
     register, 
     handleSubmit,
@@ -29,13 +30,12 @@ const Login = () => {
 
   const { mutate } = useMutation({
     mutationFn: (values: LoginTypeForm) => {
-      userState.set({
-        phone: values.phone,
-      } as any);
 
-      return signin({
-        phone: values.phone,
-      })
+      let phone = countryCode + values.phone.replace(/\D/g, '')
+
+      setUserState({phone} as UserState);
+
+      return signin({phone})
     },
     onSuccess: (data) => {
       navigate('/verify-account');
