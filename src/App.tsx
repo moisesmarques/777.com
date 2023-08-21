@@ -47,7 +47,7 @@ const App: React.FC = () => {
     <UserContext.Provider value={{userState: userState, setUserState: setUserStateFunc}}>
         <ThemeProvider theme={ Dark }>
             <QueryClientProvider client={queryClient}>
-              <ApiInterceptor token={userState.token}/>
+              <ApiInterceptor/>
               <CssBaseline />
               <BrowserRouter>
                 <Box sx={{ display: 'flex',
@@ -66,7 +66,7 @@ const App: React.FC = () => {
                       width: 'inherit',
                       maxWidth: '600px',
                     }}>
-                      <Routes isAuthenticated={!!userState.token}/>
+                      <Routes />
                   </Box>
                 </Box>
                 <GlobalStyle />                

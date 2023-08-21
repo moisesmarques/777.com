@@ -1,12 +1,12 @@
 import React, { useContext, useEffect } from 'react';
 import { useForm } from "react-hook-form";
 import { useMutation } from '@tanstack/react-query';
-import { signin, signinVerify } from '../../../services/userService';
+import { signin, signinVerify } from '../../services/userService';
 import { toast } from 'react-toastify';
-import { UserContext, UserState } from '../../../App';
+import { UserContext, UserState } from '../../App';
 import { Box, Button, Container, TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-const logo = require('../../../assets/logo.png')
+const logo = require('../../assets/logo.png')
 
 type VerifyForm = {
   code: string;
@@ -23,7 +23,7 @@ const VerifyAccount = () => {
     }),
     onSuccess: (data) => {
       setUserState({ token: data.accessToken } as UserState)
-      navigate('/')
+      window.location.replace('/')
     }
   })
 

@@ -1,30 +1,40 @@
 import React from 'react';
-import { Route, Routes as ReactRoutes } from 'react-router-dom';
+import { Route, Routes as ReactRoutes, Navigate } from 'react-router-dom';
 import Home from '../pages/Home';
 import Login from '../pages/Login';
-import VerifyAccount from '../pages/Login/VerifyAccount';
+import VerifyAccount from '../pages/VerifyAccount';
 import NotFound from '../pages/NotFound';
 
 type Props = {
-  isAuthenticated: boolean;
-}
+  pass: boolean;  
+  children: React.ReactElement;
+};
 
-export const Routes: React.FC<Props> = ({ isAuthenticated }) => {
+const Private = ({ pass, children }: Props) => {
+  if (!pass) {
+    return <Navigate to="/login" />;
+  }
+  return children;
+};
+
+const Public = ({ pass, children }: Props) => {
+  if (!pass) {
+    return <Navigate to="/" />;
+  }
+  return children;
+};
+
+export const Routes = () => {
   
-  return isAuthenticated ?
-      <PrivateRoutes/> : <PublicRoutes/>
-}
+  const userState = localStorage.getItem('current_user')
+  const token = userState ? JSON.parse(userState).token : ''
+  const isAuthenticated = token !== ''
 
-const PublicRoutes = () => (
-  <ReactRoutes>
-    <Route path="/verify-account" element={<VerifyAccount/>} />
-    <Route path="*" element={<Login/>} />
-  </ReactRoutes>
-);
-
-const PrivateRoutes = () => (
-  <ReactRoutes>
-    <Route path="/" element={<Home/>} />
-    <Route path="*" element={<NotFound/>} />
-  </ReactRoutes>
-);
+  return (
+    <ReactRoutes>
+      <Route path="/" element={<Private pass={isAuthenticated} ><Home/></Private>} />
+      <Route path="login" element={<Public pass={!isAuthenticated} ><Login/></Public>} />
+      <Route path="/verify-account" element={<Public pass={!isAuthenticated} ><VerifyAccount/></Public>} />
+      <Route path="*" element={<NotFound/>} />
+    </ReactRoutes>
+  )}

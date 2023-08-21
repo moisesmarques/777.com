@@ -3,11 +3,15 @@ import { api } from "../services/userService";
 import React, { useEffect, useState } from "react";
 import Loading from "../components/Loading";
 
-const ApiInterceptor = ({token}: any) => {
+const ApiInterceptor = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const userState = localStorage.getItem('current_user')
+  const token = userState ? JSON.parse(userState).token : ''
 
   useEffect(() => {
     api.interceptors.request.clear()
+    api.interceptors.response.clear()
   
     api.interceptors.request.use(
       r => {
@@ -18,7 +22,7 @@ const ApiInterceptor = ({token}: any) => {
       , e => {
         setIsLoading(false)
         toast.error(e.response?.data?.code || 'Ops...')
-        return Promise.reject(null);
+        return Promise.reject({});
       })
   
     api.interceptors.response.use(
@@ -27,19 +31,11 @@ const ApiInterceptor = ({token}: any) => {
         return r;
       }
       , e => {
-        setIsLoading(false)
-        if(e.response?.status === 401){
-          window.location.reload()
-        }
-  
-        if(e.response?.status === 400){
-          toast.error(e.response?.data?.code || 'Ops...')
-          return Promise.reject(null);
-        }
-  
+        setIsLoading(false)        
         toast.error(e.response?.data?.code || 'Ops...')
+        return Promise.reject({});
       })
-    }, [token, setIsLoading])
+    }, [userState])
 
     return (
       <Loading isLoading={isLoading}/>
