@@ -15,7 +15,7 @@ export type LoginTypeForm = {
 
 const Login = () => {
   const navigate = useNavigate();
-  const {userState, setUserState} = useContext(UserContext);
+  const userState = useContext(UserContext);
   
   const { 
     register, 
@@ -30,11 +30,8 @@ const Login = () => {
 
   const { mutate } = useMutation({
     mutationFn: (values: LoginTypeForm) => {
-
       let phone = countryCode + values.phone.replace(/\D/g, '')
-
-      setUserState({phone} as UserState);
-
+      userState.set({phone} as UserState);
       return signin({phone})
     },
     onSuccess: (data) => {

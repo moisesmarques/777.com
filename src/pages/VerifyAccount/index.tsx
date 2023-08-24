@@ -13,7 +13,7 @@ type VerifyForm = {
 }
 
 const VerifyAccount = () => {  
-  const { userState, setUserState } = useContext(UserContext);
+  const userState = useContext(UserContext);
   const navigate = useNavigate();
   
   const { mutate: verifyAccount } = useMutation({
@@ -22,7 +22,10 @@ const VerifyAccount = () => {
       otp: values.code
     }),
     onSuccess: (data) => {
-      setUserState({ token: data.accessToken } as UserState)
+      userState.set({ 
+        token: data.accessToken,
+        username: data.username,
+      } as UserState)
       window.location.replace('/')
     }
   })

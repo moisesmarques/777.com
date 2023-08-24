@@ -14,7 +14,7 @@ type Props = {
 const BottomNavigation: React.FC<Props> = ({spinHandler}) => {
 
     const navigate = useNavigate();
-    const {userState, setUserState} = useContext(UserContext);
+    const userState = useContext(UserContext);
 
     return(
         <Paper sx={{ position: 'fixed',
@@ -25,7 +25,7 @@ const BottomNavigation: React.FC<Props> = ({spinHandler}) => {
             <BottomNavigationAction onClick={() => navigate('/')} label="Home" icon={<HomeRoundedIcon />} />
             <BottomNavigationAction onClick={spinHandler} label="Messages" icon={<MessageRoundedIcon />} />
             <BottomNavigationAction onClick={() => navigate('/')} label="Profile" icon={<AccountBoxRoundedIcon />} />
-            <BottomNavigationAction onClick={() => setUserState({showSettings: true} as UserState)} label="Settings" icon={<SettingsRoundedIcon />} />
+            <BottomNavigationAction onClick={() => userState.set({showSettings: true} as UserState)} label="Settings" icon={<SettingsRoundedIcon />} />
             </BottomNavigationMui>
         </Paper>
     )

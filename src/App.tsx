@@ -13,38 +13,38 @@ import ApiInterceptor from './middlewares/ApiInterceptor';
 const queryClient = new QueryClient()
 
 export type UserState = {
-  phone: string;
+  username: string;
+  phone: string;  
   token: string;
   showSettings: boolean;
+  set: (props: UserState) => void;
 }
 
 const localStorageUser = localStorage.getItem('current_user')
 const initialUserState = (localStorageUser ? 
   JSON.parse(localStorageUser) : 
   { 
-    phone: "",
-    token: "",
+    phone: "",    
+    username: "",
     showSettings:false,
+    token: "",
+    set: (props: UserState) => {}
   }) as UserState;
 
-export const UserContext = createContext<{ 
-  userState: UserState,
-  setUserState: (props: UserState) => void }>({
-    userState: initialUserState,
-    setUserState: () => {}
-  });
+export const UserContext = createContext<UserState>(initialUserState);
 
 const App: React.FC = () => {
-  const [userState, setUserState] = useState<UserState>(initialUserState);
-
-  const setUserStateFunc = ( props: UserState) => {
-    const us = {...userState, ...props}
-    setUserState(us)
-    localStorage.setItem('current_user', JSON.stringify(us))
-  }
+  const [userState, setUserState] = useState<UserState>({
+    ...initialUserState,
+    set: ( props: UserState) => {
+      const us = {...userState, ...props}
+      setUserState(us)
+      localStorage.setItem('current_user', JSON.stringify(us))
+    }
+  });
 
   return (
-    <UserContext.Provider value={{userState: userState, setUserState: setUserStateFunc}}>
+    <UserContext.Provider value={userState}>
         <ThemeProvider theme={ Dark }>
             <QueryClientProvider client={queryClient}>
               <ApiInterceptor/>

@@ -16,6 +16,10 @@ export type SigninVerifyRequest = {
 
 export type SigninVerifyResponse = {
   accessToken: string;
+  username: string;
+  credits: number;  
+  bet: number;
+  win: number;
 }
 
 export const signin = (request: SigninRequest): Promise<any> => {
