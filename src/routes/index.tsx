@@ -4,6 +4,7 @@ import Home from '../pages/Home';
 import Login from '../pages/Login';
 import VerifyAccount from '../pages/VerifyAccount';
 import NotFound from '../pages/NotFound';
+import Settings from '../pages/Withdraw';
 
 type Props = {
   pass: boolean;  
@@ -33,6 +34,7 @@ export const Routes = () => {
   return (
     <ReactRoutes>
       <Route path="/" element={<Private pass={isAuthenticated} ><Home/></Private>} />
+      <Route path="/withdraw" element={<Private pass={isAuthenticated} ><Settings/></Private>} />
       <Route path="login" element={<Public pass={!isAuthenticated} ><Login/></Public>} />
       <Route path="/verify-account" element={<Public pass={!isAuthenticated} ><VerifyAccount/></Public>} />
       <Route path="*" element={<NotFound/>} />

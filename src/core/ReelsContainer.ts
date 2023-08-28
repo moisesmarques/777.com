@@ -2,71 +2,58 @@ import * as PIXI from 'pixi.js';
 import Reel from './Reel';
 
 export default class ReelsContainer {
+
     public readonly reels: Array<Reel> = [];
     public readonly container: PIXI.Container;    
-    public readonly textures: Array<PIXI.Texture>;
     public spinAudio: HTMLAudioElement;
     public NUMBER_OF_REELS = 3;
-    public NUMBER_OF_ROWS = 5;
+    public NUMBER_OF_ROWS = 3;
     public REEL_WIDTH = 0;
-    public ROW_HEIGHT = 70;
+    public ROW_HEIGHT = 100;
     public REEL_HEIGHT = this.ROW_HEIGHT * this.NUMBER_OF_ROWS;
 
-    constructor(app: PIXI.Application) {
-        
+    constructor(app: PIXI.Application, textures: Array<Array<PIXI.Texture>>) {
         this.container = new PIXI.Container();
+        this.REEL_WIDTH = app.screen.width * 0.6 / this.NUMBER_OF_REELS;
+        this.spinAudio = new Audio('../../assets/spin.mp3')       
 
-        this.REEL_WIDTH = app.screen.width * 0.8 / this.NUMBER_OF_REELS;
-
-        const bar = PIXI.Texture.from('../../assets/BAR.png')
-        const bar2x = PIXI.Texture.from('../../assets/2xBAR.png')
-        const bar3x = PIXI.Texture.from('../../assets/3xBAR.png')
-        const seven = PIXI.Texture.from('../../assets/7.png')
-        const cherry = PIXI.Texture.from('../../assets/Cherry.png')
-        const berry = PIXI.Texture.from('../../assets/Berry.png')
-
-        this.spinAudio = new Audio('../../assets/spin.mp3')
-        
-        this.textures = [            
-            bar,
-            cherry,
-            seven,
-            bar3x,
-            berry,
-            bar2x,            
-        ];
 
         for (let i = 0; i < this.NUMBER_OF_REELS; i++) {
             const reel = new Reel(app, this);
-            let mixTextures = this.textures.sort(() => Math.random() - 0.5)
-            reel.generate(i, mixTextures);
+            reel.generate(i, textures[i]);
             this.reels.push(reel);
             this.container.addChild(reel.container);
         }
     }
 
+    swapTextures(textures: Array<Array<PIXI.Texture>>){
+        this.reels.forEach((reel, index) => {
+            reel.slots.forEach((slot, index2) => {
+                (slot.getChildAt(0) as PIXI.Sprite).texture = textures[index][index2]
+            })
+        })
+    }
+
     async spin(config: any) {
         
         const reelsToSpin = [...this.reels];
+        this.spinAudio.currentTime = 0
         this.spinAudio.play()
+        let blurFilter = new PIXI.BlurFilter()
+        blurFilter.blurX = 0
+        blurFilter.blurY = 4
+        this.reels.forEach(reel => reel.slots.forEach(slot => slot.getChildAt(0).filters = [blurFilter]))       
 
-        while (true) {
-            
-            await Promise.all(reelsToSpin.map(reel => reel.spinOneTime(config.speed)));
-            
-            if (Date.now() >= config.spinUntil) {                
-                if((reelsToSpin[0].slots[2].getChildAt(0) as PIXI.Sprite).texture.textureCacheIds[0] == config.result[0]){
-                    config.result.shift()
-                    reelsToSpin.shift()
-                    let reelsSpined = (this.reels.length - reelsToSpin.length + 1)
-                    config.speed = config.speed * reelsSpined * 0.5;
-                    config.spinUntil = Date.now() + reelsSpined * 1000;
-                }
-                
-            }            
+        while(true){
+            await Promise.all(reelsToSpin.map(reel => reel.spin(config.speed)))
+            if(Date.now() > config.until){
+                let reelOff = reelsToSpin.shift()
+                reelOff?.slots.forEach(slot => slot.getChildAt(0).filters = [])
+            }
+            if(reelsToSpin.length === 0)
+                break;
+        }        
 
-            if (!reelsToSpin.length) break;
-        }
         this.spinAudio.pause()
         config.callback()
     }

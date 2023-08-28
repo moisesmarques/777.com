@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import Game from '../../core/Game';
 
 const Home = () => {
     return (
-        <Game />
+        <div style={{height: '100%'}}>
+            <Game />
+            <span style={{fontFamily: 'Rubik Mono One', position: 'fixed', left: '-200'}} >Load font...</span>
+        </div>
     )
 }
 

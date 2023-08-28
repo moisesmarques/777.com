@@ -3,7 +3,6 @@ import { Box, CssBaseline, ThemeProvider } from '@mui/material';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
-import Settings from './components/Settings';
 import { Routes } from './routes';
 import GlobalStyle from './Themes/GlobalStyle';
 import Dark from './Themes/Dark';
@@ -16,7 +15,6 @@ export type UserState = {
   username: string;
   phone: string;  
   token: string;
-  showSettings: boolean;
   set: (props: UserState) => void;
 }
 
@@ -26,7 +24,6 @@ const initialUserState = (localStorageUser ?
   { 
     phone: "",    
     username: "",
-    showSettings:false,
     token: "",
     set: (props: UserState) => {}
   }) as UserState;
@@ -50,24 +47,18 @@ const App: React.FC = () => {
               <ApiInterceptor/>
               <CssBaseline />
               <BrowserRouter>
-                <Box sx={{ display: 'flex',
-                  flexDirection: 'row',
-                  minHeight: '100vh',
-                  width: 'inherit',
-                  justifyContent: 'center',
-                  }}>
-                  <Settings showSettings={userState.showSettings}/>
-                  <Box id="main"
+                <div id='bg-image'></div>
+                <Box id="main"
                     sx={{
                       display: 'flex',
                       flexDirection: 'column',
                       flexGrow: 1,
-                      minHeight: '100vh',
+                      height: '100%',
                       width: 'inherit',
-                      maxWidth: '600px',
+                      maxWidth: '500px',
+                      margin: '0 auto',
                     }}>
-                      <Routes />
-                  </Box>
+                  <Routes />
                 </Box>
                 <GlobalStyle />                
               </BrowserRouter>

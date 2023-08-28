@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { UserContext, UserState } from '../../App';
 import { Box, Button, Container, TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-const logo = require('../../assets/logo.png')
+const logo = require('../../assets/logo512.png')
 
 type VerifyForm = {
   code: string;
@@ -55,7 +55,7 @@ const VerifyAccount = () => {
           <Box sx={{display: 'flex', flexDirection: 'column', mb: 2}}>
             <img src={logo} alt="Logo" />
           </Box>         
-          <h4>Verify your account</h4>
+          <h4>Verificar conta</h4>
           <form onSubmit={handleSubmit(data => verifyAccount(data))}>
             <Box sx={{display: 'flex', flexDirection: 'column'}}>
               <TextField

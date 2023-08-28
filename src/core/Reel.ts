@@ -23,54 +23,49 @@ export default class Reel {
     }
 
     generate(position: number, textures: Array<PIXI.Texture>){
-        for (let i = 0; i < this.NUMBER_OF_ROWS + 1; i++) {
-            const symbol = new PIXI.Sprite(textures[i]);
+        for (let i = 0; i < this.NUMBER_OF_ROWS; i++) {
+            const symbol = new PIXI.Sprite(textures[i]);            
             const slot = new PIXI.Container();
             slot.width = this.REEL_WIDTH;
             slot.height = this.ROW_HEIGHT;
 
             // put symbol inside of slot and position it in the middle
-            symbol.scale.set(0.6)
+            symbol.scale.set(0.7);
             symbol.anchor.set(0.5);
             symbol.x = this.REEL_WIDTH / 2;
             symbol.y = this.ROW_HEIGHT / 2;
             slot.addChild(symbol);
 
             slot.x =  position * this.REEL_WIDTH;
-            slot.y = (i - 1) * this.ROW_HEIGHT;
+            slot.y = i * this.ROW_HEIGHT;
             this.slots.push(slot);
             this.container.addChild(slot);
         }
     }
 
-    spinOneTime(speed: number) {
-        let doneRunning = false;
-        let yOffset = (this.REEL_HEIGHT - this.ROW_HEIGHT * this.NUMBER_OF_ROWS) / this.NUMBER_OF_ROWS / 2;
-
-        return new Promise<void>(resolve => {
+    // spin reel once with given speed
+    spin(speed: number) {
+        return new Promise(resolve => {
+            let done = false;
             const tick = () => {
-                for (let i = this.slots.length - 1; i >= 0; i--) {
-
-                    const slot = this.slots[i];
-
-                    if (slot.y + speed > this.REEL_HEIGHT + yOffset) {
-                        doneRunning = true;
-                        speed = this.REEL_HEIGHT - slot.y + yOffset;
-                        slot.y = -(this.ROW_HEIGHT + yOffset);
-                    } else {
-                        slot.y += speed;
+                // move all slots down
+                this.slots.forEach(slot => {
+                    slot.y += speed;
+                    if (slot.y >= this.REEL_HEIGHT) {                        
+                        // move slot to the top
+                        slot.y -= this.REEL_HEIGHT + this.ROW_HEIGHT/4;
                     }
 
-                    if (i === 0 && doneRunning) {
-                        let t = this.slots.pop();
-                        if (t) this.slots.unshift(t);
-                        this.ticker.remove(tick);
-                        resolve();
-                    }
+                    if(this.slots[0].y === 0)
+                        done = true;
+                })
+                
+                if (done) {
+                    this.ticker.remove(tick);
+                    resolve(null);
                 }
             }
-
             this.ticker.add(tick);
-        });
+        })
     }
 }

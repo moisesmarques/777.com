@@ -6,7 +6,7 @@ import { signin } from "../../services/userService";
 import { Box, Button, Container, TextField } from "@mui/material";
 import { UserContext, UserState } from "../../App";
 
-const logo = require('../../assets/logo.png')
+const logo = require('../../assets/logo512.png')
 const countryCode = '+55'
 
 export type LoginTypeForm = {
