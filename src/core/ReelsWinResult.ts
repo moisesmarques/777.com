@@ -23,7 +23,7 @@ export default class ReelsWinResult {
     constructor(app: PIXI.Application, textures: Array<Array<PIXI.Texture>>) {        
         this.app = app;
         this.container = new PIXI.Container();
-        this.reelWidth = app.screen.width * 0.6 / this.numberOfReels;
+        this.reelWidth = app.screen.width * 0.8 / this.numberOfReels;
     }
     
     show(winningLines: Array<number>, amountPerLine: Array<number>, textures: Array<Array<PIXI.Texture>>){
@@ -51,7 +51,7 @@ export default class ReelsWinResult {
         for (let j = 0; j < this.numberOfRows; j++) {
             for (let i = 0; i < this.numberOfReels; i++) {
                 const symbol = new PIXI.Sprite(textures[i][j]);            
-                symbol.scale.set(0.7);
+                symbol.scale.set(0.6);
                 symbol.anchor.set(0.5);
                 symbol.x = this.reelWidth / 2 + i * this.reelWidth;
                 symbol.y = this.rowHeight / 2 + j * this.rowHeight;

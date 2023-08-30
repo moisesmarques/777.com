@@ -35,14 +35,13 @@ export default class SuperGanhoScreen {
 
 
         // a black rectangle to cover the reels
-        let rectWidth = text.width + 20
-        let rectHeight = text.height * 2 + 40
+        let rectWidth = this.app.screen.width
+        let rectHeight = text.height * 5
         const bg = new PIXI.Graphics();
         bg.beginFill(0x000000);
         bg.drawRect((appWidth - rectWidth) / 2, (appHeight-rectHeight) / 2, rectWidth, rectHeight);
         bg.endFill();
 
-        
         this.container.addChild(bg, text, textAmount);
 
         // animate textAmount until it reaches the final amount

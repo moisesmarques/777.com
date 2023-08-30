@@ -19,12 +19,12 @@ export default class Scoreboard {
 
         const style = new PIXI.TextStyle({
             fontFamily: 'Arial',
-            fontSize: 14,
+            fontSize: 12,
             fill: 0xffffff         
         });
 
-        const textMaxSize = app.screen.width * 0.8 / 3;
-        const leftMargin = -30;
+        const textMaxSize = app.screen.width * 0.9 / 3;
+        const leftMargin = -32;
 
         this.creditsText = new PIXI.Text(`${formatMoney(this.credits)}` , style);
         this.creditsText.resolution = 2;
@@ -34,8 +34,8 @@ export default class Scoreboard {
         creditsTextContainer.width = textMaxSize;
         sbCredits.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
         let creditsSprite = new PIXI.Sprite(sbCredits);
-        creditsSprite.anchor.set(0, 0.5)
         creditsSprite.x = (textMaxSize + creditsSprite.width) * -0.5;
+        creditsSprite.y = creditsSprite.height * 0.25 * -1;
         creditsTextContainer.addChild(creditsSprite, this.creditsText);
 
         this.betText = new PIXI.Text(`${formatMoney(this.bet)}` , style);
@@ -47,8 +47,8 @@ export default class Scoreboard {
         betTextContainer.width = textMaxSize;
         sbBet.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
         let betSprite = new PIXI.Sprite(sbBet);        
-        betSprite.anchor.set(0, 0.5)
         betSprite.x = (textMaxSize + betSprite.width) * -0.5;
+        betSprite.y = betSprite.height * 0.25 * -1;
         betTextContainer.addChild(betSprite);
         betTextContainer.addChild(this.betText);
 
@@ -60,13 +60,13 @@ export default class Scoreboard {
         wonTextContainer.width = textMaxSize;
         sbWon.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
         let wonSprite = new PIXI.Sprite(sbWon);
-        wonSprite.anchor.set(0, 0.5)
         wonSprite.x = (textMaxSize + wonSprite.width) * -0.5;
+        wonSprite.y = wonSprite.height * 0.25 * -1;
         wonTextContainer.addChild(wonSprite);
         wonTextContainer.addChild(this.wonText);
 
         this.container.x = 0;
-        this.container.y = app.screen.height - 200;
+        this.container.y = app.screen.height - 230;
 
         let textBg = new PIXI.Graphics()
             .beginFill(0x000000)

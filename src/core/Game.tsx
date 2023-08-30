@@ -104,9 +104,7 @@ const Game = () => {
                 
                 PIXI.BitmapFont.from('Rubik', {
                     fontFamily: 'Rubik Mono One',
-                    fontSize: 46,
-                    strokeThickness: 10,
-                    stroke: '#7f5c00',
+                    fontSize: 32,
                     fill: '#ffba00', // dark yellow
                     align: 'center'
                 }, {
@@ -115,7 +113,7 @@ const Game = () => {
         
                 PIXI.BitmapFont.from('Rubik-24', {
                     fontFamily: 'Rubik Mono One',
-                    fontSize: 24,
+                    fontSize: 18,
                     strokeThickness: 3,
                     stroke: 0x000000,
                     fill: '#ffba00',
@@ -147,7 +145,7 @@ const Game = () => {
             const symbols = ['sym1', 'wild', 'sym2', 'sym3', 'sym4', 'sym5', 'sym6' ]
 
             const bg = new PIXI.Sprite(assetsObj['bg']);
-            let proportion = 800 / 1000;
+            let proportion = 740 / 1000;
             bg.scale.set(proportion);
             bg.x = app.screen.width / 2 - bg.width / 2;
             bg.y = app.screen.height / 2 - bg.height / 2;
@@ -173,7 +171,7 @@ const Game = () => {
             app.stage.addChild(scoreboard.container);
             
             const playBtn = new Button(spinHandler,
-                75, 75, app.screen.width / 2, app.screen.height - 100,
+                75, 75, app.screen.width / 2, app.screen.height - 140,
                 assetsObj.playBtn,
                 assetsObj.playBtn,
                 );

@@ -55,7 +55,7 @@ const App: React.FC = () => {
                       flexGrow: 1,
                       height: '100%',
                       width: 'inherit',
-                      maxWidth: '500px',
+                      maxWidth: '360px',
                       margin: '0 auto',
                     }}>
                   <Routes />

@@ -30,7 +30,7 @@ export default class Reel {
             slot.height = this.ROW_HEIGHT;
 
             // put symbol inside of slot and position it in the middle
-            symbol.scale.set(0.7);
+            symbol.scale.set(0.6);
             symbol.anchor.set(0.5);
             symbol.x = this.REEL_WIDTH / 2;
             symbol.y = this.ROW_HEIGHT / 2;
