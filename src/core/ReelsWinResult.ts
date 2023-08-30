@@ -1,126 +1,159 @@
 import { GlowFilter } from '@pixi/filter-glow';
 import * as PIXI from 'pixi.js';
+import { formatMoney } from './utils';
 
 export default class ReelsWinResult {
-    public readonly reels: Array<ReelWinResult> = [];
+    private readonly app: PIXI.Application;
     public readonly container: PIXI.Container;    
     public numberOfReels = 3;
     public numberOfRows = 3;
     public reelWidth = 0;
     public rowHeight = 100;
-    public lines: Array<PIXI.Graphics> = [];
+    public linesGraphic: Array<PIXI.Graphics> = [];
+    private resultInterval: NodeJS.Timeout | undefined;
+    private amountsWinText: Array<PIXI.BitmapText> = [];
+    private glowFilter = new GlowFilter({ 
+        color: 0xffffff,
+        distance: 10,
+        outerStrength: 4,
+        innerStrength: 2,
+     })
+     
 
-    constructor(app: PIXI.Application, textures: Array<Array<PIXI.Texture>>) {
-        
+    constructor(app: PIXI.Application, textures: Array<Array<PIXI.Texture>>) {        
+        this.app = app;
         this.container = new PIXI.Container();
-
         this.reelWidth = app.screen.width * 0.6 / this.numberOfReels;
-
-        this.generateWinningLine([1,1,1]); // line 1 (middle)
-        this.generateWinningLine([0,0,0]); // line 2 (top)
-        this.generateWinningLine([2,2,2]); // line 3 (bottom)
-        this.generateWinningLine([0,1,2]); // line 4 (diagonal left to right)
-        this.generateWinningLine([2,1,0]); // line 5 (diagonal right to left)
-
-        for (let i = 0; i < this.numberOfReels; i++) {
-            const reel = new ReelWinResult(app, this.reelWidth, this.rowHeight, this.numberOfRows);
-            reel.generate(i, textures[i]);
-            this.reels.push(reel);
-            this.container.addChild(reel.container);            
-        }
     }
     
-    show(lines: Array<number>, textures: Array<Array<PIXI.Texture>>){
-        this.container.visible = true;
-        
-        lines.forEach(line => this.lines[line].visible = true)
+    show(winningLines: Array<number>, amountPerLine: Array<number>, textures: Array<Array<PIXI.Texture>>){
 
-        this.reels.forEach((reel, index) => {
-            reel.slots.forEach((slot, index2) => {
-                (slot.getChildAt(0) as PIXI.Sprite).texture = textures[index][index2]
-            })
-        })
-    }
+        let symbolsByLine = [
+            [3,4,5],
+            [0,1,2],
+            [6,7,8],
+            [0,4,8],
+            [2,4,6]
+        ]
 
-    hide(){
-        this.container.visible = false;
-        this.lines.forEach(line => line.visible = false)
-    }
-
-    generateWinningLine(winLine: Array<number>){
-        // draw line on top of winning symbols
-        const line = new PIXI.Graphics();
-        line.lineStyle(4, 0xffffff, 1);        
-
-        let diagCorrect = 50
-
-        if(winLine[0] < winLine[this.numberOfReels - 1]){            
-            line.moveTo(0, this.rowHeight * winLine[0] + this.rowHeight / 2 - diagCorrect);
-            line.lineTo(this.reelWidth * this.numberOfReels, this.rowHeight * winLine[this.numberOfReels - 1] + this.rowHeight / 2 + diagCorrect);
-        } else if(winLine[0] > winLine[this.numberOfReels - 1]){
-            line.moveTo(0, this.rowHeight * winLine[0] + this.rowHeight / 2 + diagCorrect);
-            line.lineTo(this.reelWidth * this.numberOfReels, this.rowHeight * winLine[this.numberOfReels - 1] + this.rowHeight / 2 - diagCorrect);
-        } else{
-            line.moveTo(0, this.rowHeight * winLine[0] + this.rowHeight / 2);
-            line.lineTo(this.reelWidth * this.numberOfReels, this.rowHeight * winLine[this.numberOfReels - 1] + this.rowHeight / 2);
-        }
+        winningLines.forEach(line => this.generateWinningLine(line))
 
         let glowFilter =new GlowFilter({ 
             color: 0xffffff,
             distance: 10,
             outerStrength: 4,
             innerStrength: 2,
-         })           
-        line.filters = [glowFilter]
-        this.container.addChild(line);
-        this.lines.push(line);
-    }
-}
+         })
 
-class ReelWinResult {
-    
-    public readonly container: PIXI.Container;
-    public slots: Array<PIXI.Container> = [];
-    private readonly reelWidth: number;
-    private readonly rowHeight: number;
-    private readonly numberOfRows: number;
-    
-    constructor(app: PIXI.Application, reelWidth: number, rowHeight: number, numberOfRows: number) {
-        this.container = new PIXI.Container()
-        this.reelWidth = reelWidth;
-        this.rowHeight = rowHeight;
-        this.numberOfRows = numberOfRows;
-    }
+        // show symbols for winning line
+        const symbolsContainer = new PIXI.Container();
 
-    generate(position: number, textures: Array<PIXI.Texture>){
-        for (let i = 0; i < this.numberOfRows; i++) {
-            
-            const slot = new PIXI.Container();
-            slot.width = this.reelWidth;
-            slot.height = this.rowHeight;
-
-            // put symbol inside of slot and position it in the middle
-            const symbol = new PIXI.Sprite(textures[i]);
-            symbol.scale.set(0.7);
-            symbol.anchor.set(0.5);
-            symbol.x = this.reelWidth / 2;
-            symbol.y = this.rowHeight / 2;
-            slot.addChild(symbol);
-
-            let glowFilter =new GlowFilter({ 
-                color: 0xffffff,
-                distance: 10,
-                outerStrength: 4,
-                innerStrength: 2,
-             })        
-
-            slot.filters = [glowFilter]
-
-            slot.x =  position * this.reelWidth;
-            slot.y = i * this.rowHeight;
-            this.slots.push(slot);
-            this.container.addChild(slot);
+        for (let j = 0; j < this.numberOfRows; j++) {
+            for (let i = 0; i < this.numberOfReels; i++) {
+                const symbol = new PIXI.Sprite(textures[i][j]);            
+                symbol.scale.set(0.7);
+                symbol.anchor.set(0.5);
+                symbol.x = this.reelWidth / 2 + i * this.reelWidth;
+                symbol.y = this.rowHeight / 2 + j * this.rowHeight;
+                symbol.filters = [glowFilter]
+                symbol.visible = false
+                symbolsContainer.addChild(symbol);
+            }
         }
+        this.container.addChild(symbolsContainer);
+
+        winningLines.forEach((line) => this.generateWinningLineText(line, amountPerLine[line]))
+
+        // animate and toggle winning line symbols
+        let lineIndex = 0
+        let showingLine = winningLines[lineIndex]
+
+        symbolsByLine[showingLine].forEach(symbol => (symbolsContainer.getChildAt(symbol) as PIXI.Sprite).visible = true)
+        this.linesGraphic[lineIndex].visible = true
+        // alternate between showing and hiding symbols for each line
+        this.resultInterval = setInterval(() => {
+            symbolsByLine[showingLine].forEach(symbol => (symbolsContainer.getChildAt(symbol) as PIXI.Sprite).visible = false)
+            this.linesGraphic[lineIndex].visible = false
+            this.amountsWinText[lineIndex].visible = false
+            lineIndex++
+            if(lineIndex === winningLines.length)
+                lineIndex = 0
+            showingLine = winningLines[lineIndex]
+            symbolsByLine[showingLine].forEach(symbol => (symbolsContainer.getChildAt(symbol) as PIXI.Sprite).visible = true)
+            this.linesGraphic[lineIndex].visible = true
+            this.amountsWinText[lineIndex].visible = true
+        }, 1000)
+        
     }
 
+    hide(){
+        this.resultInterval && clearInterval(this.resultInterval)
+        this.container.removeChildren()
+        this.amountsWinText = []
+        this.linesGraphic = []
+    }
+
+    generateWinningLineText(lineNumber: number, amount: number){
+        let text = new PIXI.BitmapText(formatMoney(amount), { fontName: 'Rubik-16' });
+        // center text
+        text.x = (this.reelWidth*this.numberOfReels - text.width) / 2;
+
+        let lineY = 0;
+
+        if([0,3,4].includes(lineNumber)){
+            lineY = this.rowHeight + this.rowHeight / 2 // center
+        } else if(lineNumber == 1){
+            lineY = this.rowHeight / 2 // first
+        } else if(lineNumber == 2){
+            lineY = this.rowHeight * 2 + this.rowHeight / 2 // last
+        }
+
+        text.y = lineY
+        text.visible = false
+        this.container.addChild(text)
+        this.amountsWinText.push(text)
+    }
+
+    generateWinningLineNumber(lineNumber: number, x:number, y:number){
+        let text = new PIXI.BitmapText( `${lineNumber}`, { fontName: 'Rubik-24' });
+        text.anchor.set(0.5)
+        text.x = x
+        text.y = y
+        this.container.addChild(text)
+    }
+
+    generateWinningLine(winLine: number){
+        // draw line on top of winning symbols
+        const line = new PIXI.Graphics();
+        line.lineStyle(4, 0xffffff, 1);        
+
+        let diagCorrect = 50
+        let xstart = 0;
+        let ystart = 0;
+        let xend = 0;
+        let yend = 0;          
+
+        if(winLine == 3){            
+            xend = this.reelWidth * this.numberOfReels
+            ystart = this.rowHeight / 2 - diagCorrect
+            yend = this.rowHeight * this.numberOfRows + this.rowHeight / 2 - diagCorrect
+        } else if(winLine == 4){
+            xend = this.reelWidth * this.numberOfReels
+            ystart = this.rowHeight * this.numberOfRows + this.rowHeight / 2 - diagCorrect
+            yend = this.rowHeight / 2 - diagCorrect
+        } else{
+            let winLineMod = winLine === 0 ? 1 : winLine === 1 ? 0 : winLine
+            xend = this.reelWidth * this.numberOfReels
+            ystart = this.rowHeight * winLineMod + this.rowHeight / 2
+            yend = this.rowHeight * winLineMod + this.rowHeight / 2
+        }
+
+        line.moveTo(xstart, ystart);
+        line.lineTo(xend, yend);
+        line.filters = [this.glowFilter]
+        line.visible = false;
+        this.container.addChild(line);
+        this.generateWinningLineNumber(winLine+1, xstart, ystart)
+        this.linesGraphic.push(line)
+    }
 }

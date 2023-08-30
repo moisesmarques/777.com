@@ -3,32 +3,31 @@ import { formatMoney } from './utils';
 
 export default class Scoreboard {
     public container: PIXI.Container;
-    private wonText: PIXI.Text;
-    private creditsText: PIXI.Text;
-    private betText: PIXI.Text;    
+    public wonText: PIXI.Text;
+    public creditsText: PIXI.Text;
+    public betText: PIXI.Text;    
     public credits: number = 0;
     public bet: number = 0;
     public won: number = 0;
 
-    constructor(app: PIXI.Application, sbCredits: PIXI.Texture, sbBet: PIXI.Texture, sbWon: PIXI.Texture) { 
+    constructor(app: PIXI.Application, 
+        sbCredits: PIXI.Texture, 
+        sbBet: PIXI.Texture, 
+        sbWon: PIXI.Texture) { 
+
         this.container = new PIXI.Container();
 
         const style = new PIXI.TextStyle({
             fontFamily: 'Arial',
             fontSize: 14,
-            fill: 'white',
-            dropShadow: true,
-            dropShadowColor: '#000000',
-            dropShadowBlur: 4,
-            dropShadowAngle: Math.PI / 6,
-            dropShadowDistance: 1,
-            
+            fill: 0xffffff         
         });
 
         const textMaxSize = app.screen.width * 0.8 / 3;
         const leftMargin = -30;
 
         this.creditsText = new PIXI.Text(`${formatMoney(this.credits)}` , style);
+        this.creditsText.resolution = 2;
         this.creditsText.anchor.set(0.5, 0)
         const creditsTextContainer = new PIXI.Container()        
         creditsTextContainer.x = app.screen.width/3 + textMaxSize * 0 + leftMargin;
@@ -40,6 +39,8 @@ export default class Scoreboard {
         creditsTextContainer.addChild(creditsSprite, this.creditsText);
 
         this.betText = new PIXI.Text(`${formatMoney(this.bet)}` , style);
+        this.betText.resolution = 2;
+        this.betText.interactive = true;
         this.betText.anchor.set(0.5, 0)
         const betTextContainer = new PIXI.Container();
         betTextContainer.x = app.screen.width/3 + textMaxSize * 1 + leftMargin;
@@ -52,6 +53,7 @@ export default class Scoreboard {
         betTextContainer.addChild(this.betText);
 
         this.wonText = new PIXI.Text(`${formatMoney(this.won)}` , style);
+        this.wonText.resolution = 2;
         this.wonText.anchor.set(0.5, 0)
         const wonTextContainer = new PIXI.Container();
         wonTextContainer.x = app.screen.width/3 + textMaxSize * 2 + leftMargin;

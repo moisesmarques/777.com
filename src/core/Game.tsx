@@ -12,13 +12,15 @@ import { useEffect } from 'react';
 import React from 'react';
 import {GlowFilter} from '@pixi/filter-glow';
 import ReelsWinResult from './ReelsWinResult';
+import BetSettingsMenu from './BetSettingsMenu';
 
 const Game = () => {
     const navigate = useNavigate();
     const containerRef = React.useRef<HTMLDivElement>(null);
     useEffect(() => {
-        if(containerRef.current === null) return;
-        const container = containerRef.current;        
+        if(containerRef.current === null) return;        
+        const container = containerRef.current;  
+        container.innerHTML = '';      
         const userState = JSON.parse(localStorage.getItem('current_user') || '{}') as UserState;
         const token = userState?.token;
 
@@ -58,7 +60,7 @@ const Game = () => {
         container.appendChild(app.view as HTMLCanvasElement);
         
         let startCredits = 0;
-        let startBet = 0;
+        let startBet = 50;
         let assetsObj: any;
         let buttons: Array<Button> = [];
         
@@ -81,8 +83,6 @@ const Game = () => {
 
         api.get('/user/info').then((response) => {
             startCredits = response.data.credits;
-            startBet = response.data.bet;
-            
             PIXI.Assets.load(['sym1',
                 'sym2',
                 'sym3',
@@ -101,6 +101,40 @@ const Game = () => {
                 'wild',
                 ]).then((assets: any) => {
                 assetsObj = assets;
+                
+                PIXI.BitmapFont.from('Rubik', {
+                    fontFamily: 'Rubik Mono One',
+                    fontSize: 46,
+                    strokeThickness: 10,
+                    stroke: '#7f5c00',
+                    fill: '#ffba00', // dark yellow
+                    align: 'center'
+                }, {
+                    chars: [['0', '9'], ['a', 'z'], ['A', 'Z'], "!@#$%^&*()~{}[],. "]
+                });
+        
+                PIXI.BitmapFont.from('Rubik-24', {
+                    fontFamily: 'Rubik Mono One',
+                    fontSize: 24,
+                    strokeThickness: 3,
+                    stroke: 0x000000,
+                    fill: '#ffba00',
+                    align: 'center'
+                }, {
+                    chars: [['0', '9'], ['a', 'z'], ['A', 'Z'], "!@#$%^&*()~{}[],. "]
+                });
+
+                PIXI.BitmapFont.from('Rubik-16', {
+                    fontFamily: 'Rubik Mono One',
+                    fontSize: 16,
+                    strokeThickness: 2,
+                    stroke: 0x000000,
+                    fill: '#ffba00',
+                    align: 'center'
+                }, {
+                    chars: [['0', '9'], ['a', 'z'], ['A', 'Z'], "!@#$%^&*()~{}[],. "]
+                });
+
                 init();
             })
         })        
@@ -127,25 +161,16 @@ const Game = () => {
             const reelsWidth = reels.NUMBER_OF_REELS * reels.REEL_WIDTH;
             reels.container.x = app.screen.width / 2 - reelsWidth / 2;
             reels.container.y = 160;
-
-            let rectangleMask =new PIXI.Graphics()
-            .beginFill(0xffffff)
-            .drawRect(app.screen.width / 2 - reels.REEL_WIDTH * 3 / 2, 150, reels.REEL_WIDTH * 3, reels.ROW_HEIGHT * 3)
-            .endFill();
+            app.stage.addChild(reels.container);    
             
-            //reels.container.mask = rectangleMask
-
-            app.stage.addChild(reels.container);            
             const reelsWinResult = new ReelsWinResult(app, [textures, textures, textures]);
             reelsWinResult.container.x = app.screen.width / 2 - reelsWidth / 2;
             reelsWinResult.container.y = 160;
             app.stage.addChild(reelsWinResult.container);
-            reelsWinResult.container.visible = false;
-            
 
             const scoreboard = new Scoreboard(app, assetsObj.sbCredits, assetsObj.sbBet, assetsObj.sbWon);
             scoreboard.update(startCredits, startBet, 0)
-            app.stage.addChild(scoreboard.container);       
+            app.stage.addChild(scoreboard.container);
             
             const playBtn = new Button(spinHandler,
                 75, 75, app.screen.width / 2, app.screen.height - 100,
@@ -224,77 +249,40 @@ const Game = () => {
             app.stage.addChild(exitBtn.sprite);
             buttons.push(exitBtn);
 
+            const betOptions = [50, 150, 500, 750, 1500, 2250, 4500]
+
+            const betSettings = new BetSettingsMenu(app, scoreboard, betOptions);
+
+            scoreboard.betText.on('pointerdown', () => {
+                console.log('bet settings')
+                betSettings.show()
+            })
+
             const superGanhoScreen = new SuperGanhoScreen(app);
 
             function increaseBetHandler() {
-                let betIncrease = 50;
-                if (scoreboard.bet >= 50000) {
-                    betIncrease = 10000;
-                } else if (scoreboard.bet >= 10000) {
-                    betIncrease = 5000;
-                } else if (scoreboard.bet >= 5000) {
-                    betIncrease = 1000;
-                } else if (scoreboard.bet >= 1000) {
-                    betIncrease = 500;
-                } else if (scoreboard.bet >= 500) {
-                    betIncrease = 100;
+                let currentBetIndex = betOptions.indexOf(scoreboard.bet)
+                if(currentBetIndex >= betOptions.length - 1){
+                    return;
                 }
-
-                api.post('/game/bet/increase', { bet: betIncrease }).then((response) => {
-                    let bet = response.data.bet;
-                    scoreboard.update(scoreboard.credits, bet, scoreboard.won)
-                }).catch((error) => {
-                    let message = error.response?.data?.code
-                    let value = error.response?.data?.value
-                    if(message === 'MAXIMUM_BET') {
-                        toast.warning(`Maximum bet is ${formatMoney(value)}`)
-                    } else if (message === 'INSUFFICIENT_FUNDS'){
-                        toast.warning(`Insufficient funds. You have ${formatMoney(value)} credits`)
-                    } else {
-                        toast.error('Ops... Something went wrong')
-                    }
-                })
+                let nextBet = betOptions[currentBetIndex + 1]
+                scoreboard.update(scoreboard.credits, nextBet, scoreboard.won)
             }
 
             function decreaseBetHandler() {
-                let betDecrease = 50;
-                if (scoreboard.bet > 50000) {
-                    betDecrease = 10000;
-                } else if (scoreboard.bet > 10000) {
-                    betDecrease = 5000;
-                } else if (scoreboard.bet > 5000) {
-                    betDecrease = 1000;
-                } else if (scoreboard.bet > 1000) {
-                    betDecrease = 500;
-                } else if (scoreboard.bet > 500) {
-                    betDecrease = 100;
-                }            
-
-                api.post('/game/bet/decrease', { bet: betDecrease }).then((response) => {
-                    let bet = response.data.bet;
-                    scoreboard.update(scoreboard.credits, bet, scoreboard.won)
-                }).catch((error) => {
-                    let message = error.response?.data?.code
-                    let value = error.response?.data?.value
-                    if(message === 'MINIMUM_BET'){
-                        toast.warning(`Minimum bet is ${formatMoney(value)}`)
-                    } else if (message === 'INSUFFICIENT_FUNDS'){
-                        toast.warning(`Insufficient funds. You have ${formatMoney(value)} credits`)
-                    } else {
-                        toast.error('Ops... Something went wrong')
-                    }
-                })
+                let currentBetIndex = betOptions.indexOf(scoreboard.bet)
+                if(currentBetIndex === 0){
+                    return;
+                }
+                let previousBet = betOptions[currentBetIndex - 1]
+                scoreboard.update(scoreboard.credits, previousBet, scoreboard.won)
             }
 
             function spinHandler() {
 
                 reels.container.alpha = 1;
-
-                if(reelsWinResult.container.visible)
-                    reelsWinResult.hide();
-
-                if(superGanhoScreen.container.visible)
-                    superGanhoScreen.hide();
+                reelsWinResult.hide();
+                superGanhoScreen.hide();
 
                 scoreboard.update(scoreboard.credits, scoreboard.bet, 0)
                 if(scoreboard.bet > scoreboard.credits){
@@ -312,10 +300,10 @@ const Game = () => {
 
                 reels.spin(config)
                 scoreboard.update(scoreboard.credits - scoreboard.bet, scoreboard.bet, scoreboard.won);
-                api.post('/game/spin').then((response) => {
-
+                api.post('/game/spin', {
+                    bet: scoreboard.bet
+                }).then((response) => {
                     const credits = response.data.credits;
-                    const bet = response.data.bet;
                     const win = response.data.win;
                     const amountWon = response.data.amountWon;
                     let textures = response.data.symbols.map((reel: Array<string>) => {
@@ -327,12 +315,12 @@ const Game = () => {
                     reels.swapTextures(textures)                    
 
                     config.callback = () => {
-                        scoreboard.update(credits, bet, scoreboard.won + amountWon);
+                        scoreboard.update(credits, scoreboard.bet, scoreboard.won + amountWon);
                         reels.container.alpha = 0.3;
 
                         if(win){
                             winAudio.play()
-                            reelsWinResult.show(response.data.winningLines.map((line: number) => line - 1), textures)
+                            reelsWinResult.show(response.data.winningLines, response.data.amountPerLine, textures)
                             superGanhoScreen.show(amountWon)
                         }
 

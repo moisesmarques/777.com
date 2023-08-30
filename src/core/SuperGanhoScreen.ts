@@ -25,17 +25,6 @@ export default class SuperGanhoScreen {
 
     private generate(appWidth: number, appHeight: number, amount: number = 0) {
 
-        PIXI.BitmapFont.from('Rubik', {
-            fontFamily: 'Rubik Mono One',
-            fontSize: 46,
-            strokeThickness: 10,
-            stroke: '#7f5c00',
-            fill: '#ffba00', // dark yellow
-            align: 'center'
-        }, {
-            chars: [['0', '9'], ['a', 'z'], ['A', 'Z'], "!@#$%^&*()~{}[],. "]
-        });
-
         const text = new PIXI.BitmapText('Super Ganho!', { fontName: 'Rubik' });
         text.x = (appWidth - text.width) / 2;
         text.y = (appHeight) / 2 - text.height;
