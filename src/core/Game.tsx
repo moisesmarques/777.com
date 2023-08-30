@@ -49,7 +49,6 @@ const Game = () => {
         const app = new PIXI.Application({
             width: 360,
             height: 740,
-            resolution: window.devicePixelRatio || 1,
             eventMode: 'passive',
             backgroundAlpha: 0,
             eventFeatures: {
@@ -356,8 +355,7 @@ const Game = () => {
     }, [containerRef.current])
 
     return (
-        <div ref={containerRef} style={{
-            margin:'0 auto'}}></div>
+        <div ref={containerRef} style={{margin:'0 auto'}}></div>
     )
 }
 

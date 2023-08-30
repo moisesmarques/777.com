@@ -52,8 +52,7 @@ const App: React.FC = () => {
                       display: 'flex',
                       flexDirection: 'row',
                       flexGrow: 1,
-                      width: '100%',
-                      maxWidth: '500px',
+                      width: '360px',
                       margin: '0 auto',
                       height: '100%',
                     }}>
