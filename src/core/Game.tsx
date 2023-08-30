@@ -70,7 +70,8 @@ const Game = () => {
         PIXI.Assets.add('sym4', '../../assets/opala.png')
         PIXI.Assets.add('sym5', '../../assets/ametista.png')        
         PIXI.Assets.add('sym6', '../../assets/topaz.png')
-        PIXI.Assets.add('bg', '../../assets/slot-machine-skin-1.png')
+        PIXI.Assets.add('skin', '../../assets/slot-machine-skin-1.png')
+        PIXI.Assets.add('background', '../../assets/background.jpg')
         PIXI.Assets.add('sbCredits', '../../assets/scoreboard-credits.png')
         PIXI.Assets.add('sbBet', '../../assets/scoreboard-bet.png')
         PIXI.Assets.add('sbWon', '../../assets/scoreboard-won.png')
@@ -89,7 +90,8 @@ const Game = () => {
                 'sym4',
                 'sym5',
                 'sym6',
-                'bg',
+                'skin',
+                'background',
                 'sbCredits',
                 'sbBet',
                 'sbWon',
@@ -144,13 +146,15 @@ const Game = () => {
 
             const symbols = ['sym1', 'wild', 'sym2', 'sym3', 'sym4', 'sym5', 'sym6' ]
 
-            const bg = new PIXI.Sprite(assetsObj['bg']);
+            const bg = new PIXI.Sprite(assetsObj['background']);
             bg.x = app.screen.width / 2 - bg.width / 2;
             bg.y = app.screen.height / 2 - bg.height / 2;
-
-            //find the proportion of the screen size to the background size where background height is 1000 and app height is 740
-            
             app.stage.addChild(bg);
+
+            const skin = new PIXI.Sprite(assetsObj['skin']);
+            skin.x = app.screen.width / 2 - skin.width / 2;
+            skin.y = app.screen.height / 2 - skin.height / 2 - 40;
+            app.stage.addChild(skin);
 
             const textures = symbols.map( symbol => assetsObj[symbol])
             const reels = new ReelsContainer(app, [textures, textures, textures]);
@@ -289,7 +293,7 @@ const Game = () => {
                 buttons.forEach((button) => button.setDisabled());
 
                 let config = {
-                    speed: 25,
+                    speed: 20,
                     until: Date.now() + 30000,
                     callback: () => {}
                 }

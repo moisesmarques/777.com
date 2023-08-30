@@ -20,7 +20,6 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../services/userService';
 import { toast } from 'react-toastify';
-import TabPanel from '../../components/Tabs';
 import StarIcon from '@mui/icons-material/StarBorder';
 
 const formatMoney = (number: number) => `R$ ${new Intl.NumberFormat('pt-BR', {
@@ -103,7 +102,6 @@ const Withdraw = () => {
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setCurrentTab(newValue);
     };
-
         
     const tiers = [        
         {
@@ -137,14 +135,14 @@ const Withdraw = () => {
     return (
         <Box sx={{display: 'flex',
                 flexDirection: 'column',                
-                height: '100%',
-                width: '100%',
                 backgroundColor: '#333',
+                width: '100%',
+                minHeight: '100vh',
                 }}>      
             <Box sx={{display:'flex', flexDirection: 'row', justifyContent: 'end', p: 1}}>
                 <Button variant="contained" onClick={() => navigate('/')}>X</Button>              
             </Box>
-            <Box sx={{p: 2}}>
+            <Box sx={{display:'flex', flexDirection: 'column', p: 2, backgroundColor: '#333'}}>
                 <Box sx={{p: 1, mb: 1}}>
                     <TextField
                         label="Créditos R$"                                                        
@@ -153,7 +151,7 @@ const Withdraw = () => {
                         disabled
                     />
                 </Box>
-                <Box sx={{ width: '100%' }}>
+                <Box>
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <Tabs value={currentTab} onChange={handleChange}>
                             <Tab label="Depositar" value={0} />
@@ -161,7 +159,7 @@ const Withdraw = () => {
                             <Tab label="Histórico de Saques" value={2} />
                         </Tabs>
                     </Box>
-                    <TabPanel value={currentTab} index={0}>
+                    <Box hidden={currentTab !== 0}>
                     {tiers.map((tier) => (
                         <Card>
                             <CardHeader
@@ -219,8 +217,8 @@ const Withdraw = () => {
                             </CardActions>
                         </Card>
                     ))}
-                    </TabPanel>
-                    <TabPanel value={currentTab} index={1}>
+                    </Box>
+                    <Box hidden={currentTab !== 1}>
                         <form onSubmit={handleSubmit(data => withdraw(data))}>
                             <Box sx={{display: 'flex', flexDirection: 'column', p: 1, gap: 2}}>                        
                                 <Select
@@ -257,9 +255,9 @@ const Withdraw = () => {
                                 <Button variant="contained" type="submit">Sacar</Button>
                             </Box>                    
                         </form>
-                    </TabPanel>
-                    <TabPanel value={currentTab} index={2}>
-                        <Table sx={{ width: '100%' }} aria-label="simple table">
+                    </Box>
+                    <Box hidden={currentTab !== 2}>
+                        <Table sx={{ width: '100%'}} aria-label="simple table">
                             <TableHead>
                             <TableRow>
                                 <TableCell>Data Saque</TableCell>
@@ -280,10 +278,8 @@ const Withdraw = () => {
                             ))}
                             </TableBody>
                         </Table>
-                    </TabPanel>                    
+                    </Box>
                 </Box>
-
-                
             </Box>
         </Box>
     )

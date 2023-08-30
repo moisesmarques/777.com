@@ -66,7 +66,7 @@ export default class Scoreboard {
         wonTextContainer.addChild(this.wonText);
 
         this.container.x = 0;
-        this.container.y = app.screen.height - 230;
+        this.container.y = app.screen.height - 220;
 
         let textBg = new PIXI.Graphics()
             .beginFill(0x000000)

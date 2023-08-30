@@ -15,7 +15,7 @@ export default class BetSettingsMenu {
         // draw a gray rectangle
         const bg = new PIXI.Graphics();
         bg.beginFill(0x282833);
-        bg.drawRect(0, 0, app.screen.width, app.screen.height/2);
+        bg.drawRect(0, 0, app.screen.width, app.screen.height*0.7);
         bg.endFill();
         bg.interactive = true;
         

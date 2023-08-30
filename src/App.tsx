@@ -47,14 +47,12 @@ const App: React.FC = () => {
               <ApiInterceptor/>
               <CssBaseline />
               <BrowserRouter>
-                <div id='bg-image'></div>
                 <Box id="main"
                     sx={{
                       display: 'flex',
                       flexDirection: 'column',
                       flexGrow: 1,
                       height: '100%',
-                      width: 'inherit',
                       maxWidth: '360px',
                       margin: '0 auto',
                     }}>

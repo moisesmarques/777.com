@@ -20,23 +20,6 @@ export default createGlobalStyle`
     width: 100%;
   }
 
-  #bg-image {
-    background-image: url('/assets/slot-machine-skin-1.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
-    filter: blur(2px);
-    -webkit-filter: blur(2px);
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index:-1;
-    opacity: 0.2;
-  }
-
   body, input, button, textarea {
     font-family: Roboto,sans-serif;
     font-size: 16px;
