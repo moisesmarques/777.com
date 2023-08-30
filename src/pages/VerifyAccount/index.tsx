@@ -50,37 +50,35 @@ const VerifyAccount = () => {
   });
   
   return (
-    <Container sx={{width: '400px', mt: 10}}>
-      <Box sx={{display: 'flex', flexDirection: 'column'}}>
-          <Box sx={{display: 'flex', flexDirection: 'column', mb: 2}}>
-            <img src={logo} alt="Logo" />
-          </Box>         
-          <h4>Verificar conta</h4>
-          <form onSubmit={handleSubmit(data => verifyAccount(data))}>
-            <Box sx={{display: 'flex', flexDirection: 'column'}}>
-              <TextField
-                  label="Código de verificação"
-                  maxLength={6}
-                  placeholder="******"
-                  variant="outlined"
-                  error={!!errors.code}
-                  {...register('code', { 
-                    required: 'Digite o código recebido por SMS',
-                  })}
-                />
-            </Box>
-            <Box sx={{display: 'flex', flexDirection: 'column', mt: 2}}>
-              <Button sx={{ width: '100%'}} variant="contained" type="submit">Verificar</Button>
-          </Box>            
-          </form>
-          <Box sx={{display: 'flex', flexDirection: 'column', mt: 3}}>
-            <p style={{textAlign: 'center'}}>Ainda não recebeu o código?</p>
-            <Button onClick={() => sendOtp()} type="button">
-              Reenviar o código
-            </Button>
+    <Box sx={{display: 'flex', flexDirection: 'column', width: '360px', height: '100%'}}>
+        <Box sx={{display: 'flex', flexDirection: 'column', mb: 2, mt: 4}}>
+          <img src={logo} alt="Logo" />
+        </Box>         
+        <h4>Verificar conta</h4>
+        <form onSubmit={handleSubmit(data => verifyAccount(data))}>
+          <Box sx={{display: 'flex', flexDirection: 'column'}}>
+            <TextField
+                label="Código de verificação"
+                maxLength={6}
+                placeholder="******"
+                variant="outlined"
+                error={!!errors.code}
+                {...register('code', { 
+                  required: 'Digite o código recebido por SMS',
+                })}
+              />
           </Box>
+          <Box sx={{display: 'flex', flexDirection: 'column', mt: 2}}>
+            <Button sx={{ width: '100%'}} variant="contained" type="submit">Verificar</Button>
+        </Box>            
+        </form>
+        <Box sx={{display: 'flex', flexDirection: 'column', mt: 3}}>
+          <p style={{textAlign: 'center'}}>Ainda não recebeu o código?</p>
+          <Button onClick={() => sendOtp()} type="button">
+            Reenviar o código
+          </Button>
         </Box>
-    </Container>
+      </Box>
 )}
 
 export default VerifyAccount;

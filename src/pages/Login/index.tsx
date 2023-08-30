@@ -55,32 +55,30 @@ const Login = () => {
   }, [phoneNumber])
 
     return (
-      <Container sx={{width: '400px', mt: 10}}>
-        <Box sx={{display: 'flex', flexDirection: 'column'}}>
-          <Box sx={{display: 'flex', flexDirection: 'column', mb: 2}}>
-            <img src={logo} alt="Logo" />
-          </Box>          
-          <h4>Log in</h4>
-          <form onSubmit={handleSubmit( data => mutate(data))}>
-            <Box sx={{display: 'flex', flexDirection: 'column'}}>
-              <TextField
-                      variant="outlined"
-                      label="Celular"
-                      id="phone"
-                      error={!!errors.phone}
-                      helperText={errors.phone?.message}
-                      placeholder="(99) 99999-9999"
-                      {...register('phone', {
-                        required: 'Digite seu número de celular',
-                      })}
-                    />
-              </Box>
-              <Box sx={{display: 'flex', flexDirection: 'column', mt: 2}}>
-                <Button sx={{ width: '100%'}} variant="contained" type="submit">Entrar</Button>
-              </Box>
-          </form>
-        </Box>
-      </Container>
+      <Box sx={{display: 'flex', flexDirection: 'column', width: '360px', height: '100%'}}>
+        <Box sx={{display: 'flex', flexDirection: 'column', mb: 2, mt: 4}}>
+          <img src={logo} alt="Logo" />
+        </Box>          
+        <h4>Log in</h4>
+        <form onSubmit={handleSubmit( data => mutate(data))}>
+          <Box sx={{display: 'flex', flexDirection: 'column'}}>
+            <TextField
+                    variant="outlined"
+                    label="Celular"
+                    id="phone"
+                    error={!!errors.phone}
+                    helperText={errors.phone?.message}
+                    placeholder="(99) 99999-9999"
+                    {...register('phone', {
+                      required: 'Digite seu número de celular',
+                    })}
+                  />
+            </Box>
+            <Box sx={{display: 'flex', flexDirection: 'column', mt: 2}}>
+              <Button sx={{ width: '100%'}} variant="contained" type="submit">Entrar</Button>
+            </Box>
+        </form>
+      </Box>
     );
   };
 
