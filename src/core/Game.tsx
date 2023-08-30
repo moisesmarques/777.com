@@ -145,8 +145,6 @@ const Game = () => {
             const symbols = ['sym1', 'wild', 'sym2', 'sym3', 'sym4', 'sym5', 'sym6' ]
 
             const bg = new PIXI.Sprite(assetsObj['bg']);
-            let proportion = 740 / 1000;
-            bg.scale.set(proportion);
             bg.x = app.screen.width / 2 - bg.width / 2;
             bg.y = app.screen.height / 2 - bg.height / 2;
 
