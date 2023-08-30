@@ -9,27 +9,42 @@ export default class SuperGanhoScreen {
         this.app = app;
         this.container = new PIXI.Container();
         app.stage.addChild(this.container);
-        this.container.visible = false;        
     }
 
-    show(amount: number) {
-        this.container.visible = true;        
-        this.generate(this.app.screen.width, this.app.screen.height, amount);
-
+    show(type: 'big' | 'super' | 'mega' | 'ultra', amount: number,) {
+        this.generate(this.app.screen.width, this.app.screen.height, type, amount);
     }
 
     hide() {
-        this.container.visible = false;
-        this.container.children.forEach(child => child.destroy())
+        this.container.removeChildren();
     }
 
-    private generate(appWidth: number, appHeight: number, amount: number = 0) {
+    private generate(appWidth: number, 
+        appHeight: number,
+        type: 'big' | 'super' | 'mega' | 'ultra', 
+        amount: number = 0) {
 
-        const text = new PIXI.BitmapText('Super Ganho!', { fontName: 'Rubik' });
+        let textWin = '';
+        switch (type) {
+            case 'big':
+                textWin = 'Grande Ganho!';
+                break;
+            case 'super':
+                textWin = 'Super Ganho!';
+                break;
+            case 'mega':
+                textWin = 'Mega Ganho!';
+                break
+            case 'ultra':
+                textWin = 'Ultra Ganho!';
+                break;
+        }
+
+        const text = new PIXI.BitmapText(textWin, { fontName: 'Font-SuperWin' });
         text.x = (appWidth - text.width) / 2;
         text.y = (appHeight) / 2 - text.height;
 
-        const textAmount = new PIXI.BitmapText(formatMoney(0), { fontName: 'Rubik' });
+        const textAmount = new PIXI.BitmapText(formatMoney(0), { fontName: 'Font-SuperWin' });
         textAmount.x = (appWidth - textAmount.width) / 2;
         textAmount.y = (appHeight) / 2 + 20;
 
@@ -47,7 +62,8 @@ export default class SuperGanhoScreen {
         // animate textAmount until it reaches the final amount
         let startAmount = 0;
         let tick = () => {
-            textAmount.text = formatMoney(startAmount+= Math.random() * 1000);
+
+            textAmount.text = formatMoney(startAmount+= Math.random() * amount / 120);
             textAmount.x = (appWidth - textAmount.width) / 2;
 
             if (startAmount >= amount) {                

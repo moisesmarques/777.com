@@ -12,13 +12,6 @@ export default class ReelsWinResult {
     public linesGraphic: Array<PIXI.Graphics> = [];
     private resultInterval: NodeJS.Timeout | undefined;
     private amountsWinText: Array<PIXI.BitmapText> = [];
-    private glowFilter = new GlowFilter({ 
-        color: 0xffffff,
-        distance: 10,
-        outerStrength: 4,
-        innerStrength: 2,
-     })
-     
 
     constructor(app: PIXI.Application, textures: Array<Array<PIXI.Texture>>) {        
         this.app = app;
@@ -37,14 +30,6 @@ export default class ReelsWinResult {
         ]
 
         winningLines.forEach(line => this.generateWinningLine(line))
-
-        let glowFilter =new GlowFilter({ 
-            color: 0xffffff,
-            distance: 10,
-            outerStrength: 4,
-            innerStrength: 2,
-         })
-
         // show symbols for winning line
         const symbolsContainer = new PIXI.Container();
 
@@ -55,7 +40,6 @@ export default class ReelsWinResult {
                 symbol.anchor.set(0.5);
                 symbol.x = this.reelWidth / 2 + i * this.reelWidth;
                 symbol.y = this.rowHeight / 2 + j * this.rowHeight;
-                symbol.filters = [glowFilter]
                 symbol.visible = false
                 symbolsContainer.addChild(symbol);
             }
@@ -94,7 +78,7 @@ export default class ReelsWinResult {
     }
 
     generateWinningLineText(lineNumber: number, amount: number){
-        let text = new PIXI.BitmapText(formatMoney(amount), { fontName: 'Rubik-16' });
+        let text = new PIXI.BitmapText(formatMoney(amount), { fontName: 'Font-LineAmount' });
         // center text
         text.x = (this.reelWidth*this.numberOfReels - text.width) / 2;
 
@@ -114,18 +98,10 @@ export default class ReelsWinResult {
         this.amountsWinText.push(text)
     }
 
-    generateWinningLineNumber(lineNumber: number, x:number, y:number){
-        let text = new PIXI.BitmapText( `${lineNumber}`, { fontName: 'Rubik-24' });
-        text.anchor.set(0.5)
-        text.x = x
-        text.y = y
-        this.container.addChild(text)
-    }
-
     generateWinningLine(winLine: number){
         // draw line on top of winning symbols
         const line = new PIXI.Graphics();
-        line.lineStyle(4, 0xffffff, 1);        
+        line.lineStyle(4, 0x000000, 1);        
 
         let diagCorrect = 50
         let xstart = 0;
@@ -150,10 +126,15 @@ export default class ReelsWinResult {
 
         line.moveTo(xstart, ystart);
         line.lineTo(xend, yend);
-        line.filters = [this.glowFilter]
         line.visible = false;
         this.container.addChild(line);
-        this.generateWinningLineNumber(winLine+1, xstart, ystart)
+
+        let text = new PIXI.BitmapText( `${winLine+1}`, { fontName: 'Font-LineNumber' });
+        text.anchor.set(0.5)
+        text.x = xstart-25
+        text.y = ystart
+        this.container.addChild(text)
+
         this.linesGraphic.push(line)
     }
 }

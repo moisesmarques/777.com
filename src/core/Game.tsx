@@ -67,13 +67,14 @@ const Game = () => {
         let buttons: Array<Button> = [];
         
         PIXI.Assets.add('sym1', '../../assets/diamond.png')
-        PIXI.Assets.add('sym2', '../../assets/ruby.png')
-        PIXI.Assets.add('sym3', '../../assets/emerald.png')
-        PIXI.Assets.add('sym4', '../../assets/opala.png')
-        PIXI.Assets.add('sym5', '../../assets/ametista.png')        
-        PIXI.Assets.add('sym6', '../../assets/topaz.png')
+        PIXI.Assets.add('sym2', '../../assets/opala.png')
+        PIXI.Assets.add('sym3', '../../assets/ruby.png')
+        PIXI.Assets.add('sym4', '../../assets/emerald.png')        
+        PIXI.Assets.add('sym5', '../../assets/topaz.png')        
+        PIXI.Assets.add('sym6', '../../assets/ametista.png')
+        PIXI.Assets.add('wild', '../../assets/wild.png')
         PIXI.Assets.add('skin', '../../assets/slot-machine-skin-1.png')
-        PIXI.Assets.add('background', '../../assets/background.jpg')
+        PIXI.Assets.add('background', '../../assets/background.png')
         PIXI.Assets.add('logo', '../../assets/logo.png')
         PIXI.Assets.add('sbCredits', '../../assets/scoreboard-credits.png')
         PIXI.Assets.add('sbBet', '../../assets/scoreboard-bet.png')
@@ -83,7 +84,6 @@ const Game = () => {
         PIXI.Assets.add('plusBetBtn', '../../assets/plus-bet-button.png')
         PIXI.Assets.add('settingsBtn', '../../assets/settings-button.png')
         PIXI.Assets.add('exitBtn', '../../assets/exit-button.png')
-        PIXI.Assets.add('wild', '../../assets/wild.png')
 
         api.get('/user/info').then((response) => {
             startCredits = response.data.credits;
@@ -107,8 +107,17 @@ const Game = () => {
                 'wild',
                 ]).then((assets: any) => {
                 assetsObj = assets;
+
+                PIXI.BitmapFont.from('Font-WinAmount', {
+                    fontFamily: 'Rubik Mono One',
+                    fontSize: 18,
+                    fill: '#ffba00',
+                    align: 'center'
+                }, {
+                    chars: [['0', '9'], ['a', 'z'], ['A', 'Z'], "!@#$%^&*()~{}[],. "]
+                });
                 
-                PIXI.BitmapFont.from('Rubik', {
+                PIXI.BitmapFont.from('Font-SuperWin', {
                     fontFamily: 'Rubik Mono One',
                     fontSize: 32,
                     fill: '#ffba00', // dark yellow
@@ -117,7 +126,7 @@ const Game = () => {
                     chars: [['0', '9'], ['a', 'z'], ['A', 'Z'], "!@#$%^&*()~{}[],. "]
                 });
         
-                PIXI.BitmapFont.from('Rubik-24', {
+                PIXI.BitmapFont.from('Font-LineNumber', {
                     fontFamily: 'Rubik Mono One',
                     fontSize: 18,
                     strokeThickness: 3,
@@ -128,9 +137,9 @@ const Game = () => {
                     chars: [['0', '9'], ['a', 'z'], ['A', 'Z'], "!@#$%^&*()~{}[],. "]
                 });
 
-                PIXI.BitmapFont.from('Rubik-16', {
+                PIXI.BitmapFont.from('Font-LineAmount', {
                     fontFamily: 'Rubik Mono One',
-                    fontSize: 16,
+                    fontSize: 24,
                     strokeThickness: 2,
                     stroke: 0x000000,
                     fill: '#ffba00',
@@ -148,7 +157,7 @@ const Game = () => {
             const winAudio = new Audio('../../assets/win.mp3');
             winAudio.volume = 0.3;
 
-            const symbols = ['sym1', 'wild', 'sym2', 'sym3', 'sym4', 'sym5', 'sym6' ]
+            const symbols = ['sym1', 'wild', 'sym3', 'sym2', 'sym4', 'sym5', 'sym6' ]
 
             const bg = new PIXI.Sprite(assetsObj['background']);
             bg.x = app.screen.width / 2 - bg.width / 2;
@@ -171,6 +180,14 @@ const Game = () => {
             reels.container.x = app.screen.width / 2 - reelsWidth / 2;
             reels.container.y = 160;
             app.stage.addChild(reels.container);    
+
+            const reelsMask = new PIXI.Graphics();
+            reelsMask.beginFill(0x000000);
+            reelsMask.drawRect(reels.container.x, reels.container.y, reelsWidth, reels.REEL_HEIGHT);
+            reelsMask.endFill();
+            
+            reels.container.mask = reelsMask;
+
             
             const reelsWinResult = new ReelsWinResult(app, [textures, textures, textures]);
             reelsWinResult.container.x = app.screen.width / 2 - reelsWidth / 2;
@@ -180,7 +197,32 @@ const Game = () => {
             const scoreboard = new Scoreboard(app, assetsObj.sbCredits, assetsObj.sbBet, assetsObj.sbWon);
             scoreboard.update(startCredits, startBet, 0)
             app.stage.addChild(scoreboard.container);
-            
+
+
+            const textWinAmount = new PIXI.BitmapText(`Ganhou ${formatMoney(0)}`, { fontName: 'Font-WinAmount' });
+            textWinAmount.x = (app.screen.width - textWinAmount.width) / 2;
+            textWinAmount.y = (app.screen.height) / 2 + 90;
+            textWinAmount.visible = false;
+            app.stage.addChild(textWinAmount);
+
+            const showWinAmount = () => {
+                textWinAmount.text = `Ganhou ${formatMoney(scoreboard.won)}`
+                textWinAmount.visible = true;
+                textWinAmount.x = (app.screen.width - textWinAmount.width) / 2;
+                // let until = Date.now() + 3000;
+                // let tick = () => {
+                //     if(Date.now() > until){
+                //         app.ticker.remove(tick)
+                //         textWinAmount.visible = false;
+                //     }
+                // }
+                // app.ticker.add(tick)
+            }
+
+            const hideWinAmount = () => {
+                textWinAmount.visible = false;
+            }
+
             const playBtn = new Button(spinHandler,
                 75, 75, app.screen.width / 2, app.screen.height - 140,
                 assetsObj.playBtn,
@@ -291,6 +333,7 @@ const Game = () => {
 
                 reels.container.alpha = 1;
                 reelsWinResult.hide();
+                hideWinAmount();
                 superGanhoScreen.hide();
 
                 scoreboard.update(scoreboard.credits, scoreboard.bet, 0)
@@ -330,7 +373,18 @@ const Game = () => {
                         if(win){
                             winAudio.play()
                             reelsWinResult.show(response.data.winningLines, response.data.amountPerLine, textures)
-                            superGanhoScreen.show(amountWon)
+
+                            if (amountWon >= 250 * scoreboard.bet){
+                                superGanhoScreen.show('ultra', amountWon)
+                            } else if (amountWon >= 100 * scoreboard.bet){
+                                superGanhoScreen.show('mega', amountWon)
+                            } else if (amountWon >= 25 * scoreboard.bet){
+                                superGanhoScreen.show('super', amountWon)
+                            } else if(amountWon >= 10 * scoreboard.bet){
+                                superGanhoScreen.show('big', amountWon)
+                            } else {
+                                showWinAmount()
+                            }
                         }
 
                         buttons.forEach((button) => button.setEnabled());                        
@@ -355,7 +409,7 @@ const Game = () => {
     }, [containerRef.current])
 
     return (
-        <div ref={containerRef} style={{margin:'0 auto'}}></div>
+        <div ref={containerRef} style={{width: '360px', height: '740px', margin:'0 auto'}}></div>
     )
 }
 

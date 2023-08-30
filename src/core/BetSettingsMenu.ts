@@ -1,7 +1,5 @@
 import * as PIXI from 'pixi.js';
-import { formatMoney, formatMoneyEn } from './utils';
-import Button from './Button';
-import { ScrollBox } from '@pixi/ui';
+import { formatMoney } from './utils';
 import Scoreboard from './Scoreboard';
 
 export default class BetSettingsMenu {
@@ -88,7 +86,7 @@ export default class BetSettingsMenu {
                 this.hide();
             });
 
-            let itemText = new PIXI.Text(`${formatMoneyEn(bet)} \t\t\t\tx \t\t\t\t${lines} \t\t\t\t= \t\t\t\t${formatMoneyEn(bet * lines)}`, style);
+            let itemText = new PIXI.Text(`${formatMoney(bet)} \t\t\t\tx \t\t\t\t${lines} \t\t\t\t= \t\t\t\t${formatMoney(bet * lines)}`, style);
             itemText.resolution = 2;
             itemText.anchor.set(0.5);
             itemText.x = item.width / 2;

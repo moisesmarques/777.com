@@ -3,7 +3,12 @@ import Game from '../../core/Game';
 
 const Home = () => {
     return (
-        <Game />
+        <div style={{height: '100%',
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center'}}>
+            <Game />
+        </div>
     )
 }
 

@@ -22,7 +22,7 @@ import { api } from '../../services/userService';
 import { toast } from 'react-toastify';
 import StarIcon from '@mui/icons-material/StarBorder';
 
-const formatMoney = (number: number) => `R$ ${new Intl.NumberFormat('pt-BR', {
+const formatMoney = (number: number) => `${new Intl.NumberFormat('pt-BR', {
     style: 'decimal',
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
