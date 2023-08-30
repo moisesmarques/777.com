@@ -50,13 +50,15 @@ const App: React.FC = () => {
                 <Box id="main"
                     sx={{
                       display: 'flex',
-                      flexDirection: 'column',
+                      flexDirection: 'row',
                       flexGrow: 1,
-                      height: '100%',
-                      maxWidth: '360px',
+                      width: '100%',
+                      maxWidth: '500px',
                       margin: '0 auto',
+                      height: '100%',
                     }}>
                   <Routes />
+                  <span style={{fontFamily: 'Rubik Mono One', position: 'fixed', top: '-200px'}} >Load font...</span>
                 </Box>
                 <GlobalStyle />                
               </BrowserRouter>

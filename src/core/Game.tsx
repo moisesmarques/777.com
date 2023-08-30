@@ -47,8 +47,11 @@ const Game = () => {
         })
 
         const app = new PIXI.Application({
-            resizeTo: container,
+            width: 360,
+            height: 740,
+            resolution: window.devicePixelRatio || 1,
             eventMode: 'passive',
+            backgroundAlpha: 0,
             eventFeatures: {
                 move: true,
                 globalMove: false,
@@ -72,6 +75,7 @@ const Game = () => {
         PIXI.Assets.add('sym6', '../../assets/topaz.png')
         PIXI.Assets.add('skin', '../../assets/slot-machine-skin-1.png')
         PIXI.Assets.add('background', '../../assets/background.jpg')
+        PIXI.Assets.add('logo', '../../assets/logo.png')
         PIXI.Assets.add('sbCredits', '../../assets/scoreboard-credits.png')
         PIXI.Assets.add('sbBet', '../../assets/scoreboard-bet.png')
         PIXI.Assets.add('sbWon', '../../assets/scoreboard-won.png')
@@ -92,6 +96,7 @@ const Game = () => {
                 'sym6',
                 'skin',
                 'background',
+                'logo',
                 'sbCredits',
                 'sbBet',
                 'sbWon',
@@ -150,6 +155,11 @@ const Game = () => {
             bg.x = app.screen.width / 2 - bg.width / 2;
             bg.y = app.screen.height / 2 - bg.height / 2;
             app.stage.addChild(bg);
+
+            const logo = new PIXI.Sprite(assetsObj['logo']);
+            logo.x = app.screen.width / 2 - logo.width / 2;
+            logo.y = 10;
+            app.stage.addChild(logo);
 
             const skin = new PIXI.Sprite(assetsObj['skin']);
             skin.x = app.screen.width / 2 - skin.width / 2;
@@ -346,15 +356,8 @@ const Game = () => {
     }, [containerRef.current])
 
     return (
-        <div ref={containerRef} style={{display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                height: '100%',
-                width: '100%',
-                minHeight: '740px',
-                boxShadow: '0px 0px 25px 10px rgba(0,0,0,0.75)'
-                }}>
-        </div>
+        <div ref={containerRef} style={{
+            margin:'0 auto'}}></div>
     )
 }
 
