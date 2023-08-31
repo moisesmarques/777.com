@@ -183,12 +183,11 @@ const Game = () => {
 
             const reelsMask = new PIXI.Graphics();
             reelsMask.beginFill(0x000000);
-            reelsMask.drawRect(reels.container.x, reels.container.y, reelsWidth, reels.REEL_HEIGHT);
+            reelsMask.drawRect(reels.container.x, reels.container.y, reelsWidth, reels.ROW_HEIGHT * 3.1);
             reelsMask.endFill();
             
             reels.container.mask = reelsMask;
 
-            
             const reelsWinResult = new ReelsWinResult(app, [textures, textures, textures]);
             reelsWinResult.container.x = app.screen.width / 2 - reelsWidth / 2;
             reelsWinResult.container.y = 160;
@@ -197,7 +196,6 @@ const Game = () => {
             const scoreboard = new Scoreboard(app, assetsObj.sbCredits, assetsObj.sbBet, assetsObj.sbWon);
             scoreboard.update(startCredits, startBet, 0)
             app.stage.addChild(scoreboard.container);
-
 
             const textWinAmount = new PIXI.BitmapText(`Ganhou ${formatMoney(0)}`, { fontName: 'Font-WinAmount' });
             textWinAmount.x = (app.screen.width - textWinAmount.width) / 2;
@@ -224,7 +222,7 @@ const Game = () => {
             }
 
             const playBtn = new Button(spinHandler,
-                75, 75, app.screen.width / 2, app.screen.height - 140,
+                75, 75, app.screen.width / 2, 600,
                 assetsObj.playBtn,
                 assetsObj.playBtn,
                 );
@@ -409,7 +407,11 @@ const Game = () => {
     }, [containerRef.current])
 
     return (
-        <div ref={containerRef} style={{width: '360px', height: '740px', margin:'0 auto'}}></div>
+        <div id='game-container' ref={containerRef} style={{
+            width: '360px', 
+            height: '740px', 
+            margin:'0 auto', 
+            position: 'relative'}}></div>
     )
 }
 

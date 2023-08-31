@@ -15,6 +15,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.4.0",
+    "canvas-confetti": "^1.6.0",
     "dotenv": "^16.3.1",
     "fontfaceobserver": "^2.3.0",
     "framer-motion": "^10.15.1",
@@ -54,6 +55,7 @@
     ]
   },
   "devDependencies": {
+    "@types/canvas-confetti": "^1.6.0",
     "@types/styled-components": "^5.1.26"
   }
 }

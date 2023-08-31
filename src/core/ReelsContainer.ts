@@ -14,7 +14,7 @@ export default class ReelsContainer {
 
     constructor(app: PIXI.Application, textures: Array<Array<PIXI.Texture>>) {
         this.container = new PIXI.Container();
-        this.REEL_WIDTH = app.screen.width * 0.8 / this.NUMBER_OF_REELS;
+        this.REEL_WIDTH = app.screen.width * 0.85 / this.NUMBER_OF_REELS;
         this.spinAudio = new Audio('../../assets/spin.mp3')       
 
 
