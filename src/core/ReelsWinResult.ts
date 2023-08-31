@@ -8,9 +8,8 @@ export default class ReelsWinResult {
     public numberOfRows = 3;
     public reelWidth = 0;
     public rowHeight = 100;
-    public linesGraphic: Array<PIXI.Graphics> = [];
-    private resultInterval: NodeJS.Timeout | undefined;
-    private amountsWinText: Array<PIXI.BitmapText> = [];
+    // public linesGraphic: Array<PIXI.Graphics> = [];
+    // private amountsWinText: Array<PIXI.BitmapText> = [];
 
     constructor(app: PIXI.Application, textures: Array<Array<PIXI.Texture>>) {        
         this.app = app;
@@ -30,7 +29,6 @@ export default class ReelsWinResult {
             [0,4,8],
             [2,4,6]
         ]
-
         // generate a overlay
         const overlay = new PIXI.Graphics();
         overlay.beginFill(0x000000, 0.5);
@@ -38,7 +36,7 @@ export default class ReelsWinResult {
         overlay.endFill();
         this.container.addChild(overlay);
 
-        winningLines.forEach(line => this.generateWinningLine(line))
+        let winningLinesGraphic = winningLines.map(line => this.generateWinningLine(line))
 
         // show symbols for winning line
         const symbolsContainer = new PIXI.Container();
@@ -56,48 +54,45 @@ export default class ReelsWinResult {
         }
         this.container.addChild(symbolsContainer);
 
-        winningLines.forEach((line) => this.generateWinningLineText(line, amountPerLine[line]))
+        let amountsWinText = winningLines.map((line) => this.generateWinningLineText(line, amountPerLine[line]))
 
         // generate winning line text for total amount
         let totalAmount = amountPerLine.reduce((a, b) => a + b, 0)
-        this.generateWinningLineText(amountPerLine.length, totalAmount)
+        amountsWinText.push(this.generateWinningLineText(amountPerLine.length, totalAmount))
 
         // animate and toggle winning line symbols
         let lineIndex = winningLines.length
 
-        const animateWinningResult = () => {
+        const animateWinningResult = (winningLinesGraphic: Array<PIXI.Graphics>, amountsWinText: Array<PIXI.BitmapText>) => {
             // hide all symbols and lines
             symbolsByLine.forEach(line => line.forEach(symbol => (symbolsContainer.getChildAt(symbol) as PIXI.Sprite).visible = false))
-            this.linesGraphic.forEach(line => line.visible = false)
-            this.amountsWinText.forEach(line => line.visible = false)
+            winningLinesGraphic.forEach(line => line.visible = false)
+            amountsWinText.forEach(text => text.visible = false)
 
             if(lineIndex === winningLines.length){
                 lineIndex = 0
                 //show sum of winning lines
                 winningLines.forEach( (winLine, idx) => {
                     symbolsByLine[winLine].forEach(symbol => (symbolsContainer.getChildAt(symbol) as PIXI.Sprite).visible = true)    
-                    this.linesGraphic[idx].visible = true
+                    winningLinesGraphic[idx].visible = true
                 })
-                this.amountsWinText[this.amountsWinText.length-1].visible = true
+                amountsWinText[amountsWinText.length-1].visible = true
             }else{
                 //show winning line
                 symbolsByLine[winningLines[lineIndex]].forEach(symbol => (symbolsContainer.getChildAt(symbol) as PIXI.Sprite).visible = true)
-                this.linesGraphic[lineIndex].visible = true
-                this.amountsWinText[lineIndex].visible = true
+                winningLinesGraphic[lineIndex].visible = true
+                amountsWinText[lineIndex].visible = true
                 lineIndex++
             }
         }
 
-        animateWinningResult();
+        animateWinningResult(winningLinesGraphic, amountsWinText);
         // alternate between showing and hiding symbols for each line
-        this.resultInterval = setInterval(animateWinningResult, 1000)
+        setInterval( () => animateWinningResult(winningLinesGraphic, amountsWinText), 1000)
     }
 
     hide(){
-        this.resultInterval && clearInterval(this.resultInterval)
         this.container.removeChildren()
-        this.amountsWinText = []
-        this.linesGraphic = []
     }
 
     generateWinningLineText(lineNumber: number, amount: number){
@@ -126,7 +121,8 @@ export default class ReelsWinResult {
         text.y = lineY
         text.visible = false
         this.container.addChild(text)
-        this.amountsWinText.push(text)
+
+        return text;
     }
 
     generateWinningLine(winLine: number){
@@ -166,6 +162,6 @@ export default class ReelsWinResult {
         text.y = ystart
         this.container.addChild(text)
 
-        this.linesGraphic.push(line)
+        return line;
     }
 }

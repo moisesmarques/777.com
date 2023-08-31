@@ -118,15 +118,15 @@ export default class SuperGanhoScreen {
                 break;
             case 'super':
                 textWin = 'Super Ganho!';
-                winEffect = () => Array(3).fill(0).forEach((_, idx) => setTimeout(confettis, idx*100))
+                winEffect = () => Array(2).fill(0).forEach((_, idx) => setTimeout(confettis, idx*100))
                 break;
             case 'mega':
                 textWin = 'Mega Ganho!';
-                winEffect = () => Array(10).fill(0).forEach((_, idx) => setTimeout(confettis, idx*100))
+                winEffect = () => Array(3).fill(0).forEach((_, idx) => setTimeout(confettis, idx*100))
                 break
             case 'ultra':
                 textWin = 'Ultra Ganho!';
-                winEffect = () => Array(10).fill(0).forEach((_, idx) => setTimeout(stars, idx*100))
+                winEffect = () => Array(3).fill(0).forEach((_, idx) => setTimeout(stars, idx*100))
                 break;
         }
 
@@ -161,12 +161,6 @@ export default class SuperGanhoScreen {
         // a black rectangle to cover the reels
         let radius = this.app.screen.width/2
 
-        const bg = new PIXI.Graphics();
-        bg.beginFill(0xffffff);
-        bg.drawCircle(appWidth / 2, appHeight / 2, radius);
-        bg.endFill();
-        bg.alpha = 0;
-
         let glowFilter = new GlowFilter({
             distance: 10,
             outerStrength: 5,
@@ -182,7 +176,7 @@ export default class SuperGanhoScreen {
         chest.x = appWidth / 2;
         chest.y = appHeight / 2;
 
-        this.container.addChild(bg, chest, text, textAmount);
+        this.container.addChild(chest, text, textAmount);
 
         // animate textAmount until it reaches the final amount
         let startAmount = 0;
@@ -200,11 +194,9 @@ export default class SuperGanhoScreen {
         this.app.ticker.add(tick)
 
         // on bg click hide the screen
-        bg.interactive = true;
-        bg.on('pointerdown', () => {
-            if(startAmount < amount)
-                this.app.ticker.remove(tick)            
-
+        flare.interactive = true;
+        flare.on('pointerdown', () => {
+            this.app.ticker.remove(tick)
             this.hide()
         })   
     }   

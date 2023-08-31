@@ -379,7 +379,7 @@ const Game = () => {
                 buttons.forEach((button) => button.setDisabled());
 
                 let config = {
-                    speed: 10,
+                    speed: 15,
                     until: Date.now() + 30000,
                     callback: () => {}
                 }
