@@ -18,7 +18,7 @@ export default class ReelsWinResult {
         this.reelWidth = app.screen.width * 0.85 / this.numberOfReels;        
     }
     
-    show(winningLines: Array<number>, amountPerLine: Array<number>, textures: Array<Array<PIXI.Texture>>){
+    async show(winningLines: Array<number>, amountPerLine: Array<number>, textures: Array<Array<PIXI.Texture>>){
 
         let symbolsByLine = [
             [3,4,5],
@@ -27,6 +27,9 @@ export default class ReelsWinResult {
             [0,4,8],
             [2,4,6]
         ]
+
+        // delay for 500ms
+        await new Promise( (resolve, _) => setTimeout(resolve, 500))            
 
         // generate a overlay
         const overlay = new PIXI.Graphics();
@@ -60,7 +63,7 @@ export default class ReelsWinResult {
         this.generateWinningLineText(amountPerLine.length, totalAmount)
 
         // animate and toggle winning line symbols
-        let lineIndex = 0
+        let lineIndex = winningLines.length
 
         const animateWinningResult = () => {
             // hide all symbols and lines

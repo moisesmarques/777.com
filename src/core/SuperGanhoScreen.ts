@@ -31,7 +31,9 @@ export default class SuperGanhoScreen {
     }
 
     show(type: 'big' | 'super' | 'mega' | 'ultra', amount: number,) {
-        this.generate(this.app.screen.width, this.app.screen.height, type, amount);
+        setTimeout(() => {
+            this.generate(this.app.screen.width, this.app.screen.height, type, amount);
+        }, 1000)
     }
 
     hide() {
@@ -176,12 +178,17 @@ export default class SuperGanhoScreen {
         text.filters = [glowFilter]
         textAmount.filters = [glowFilter]
 
-        this.container.addChild(bg, text, textAmount);
+        let chest = new PIXI.Sprite(this.assets['chest1']);
+        chest.anchor.set(0.5);
+        chest.scale.set(0.7);
+        chest.x = appWidth / 2;
+        chest.y = appHeight / 2;
+
+        this.container.addChild(bg, chest, text, textAmount);
 
         // animate textAmount until it reaches the final amount
         let startAmount = 0;
         let tick = () => {
-
             textAmount.text = formatMoney(startAmount+= Math.random() * amount / 120);
             textAmount.x = (appWidth - textAmount.width) / 2;
 

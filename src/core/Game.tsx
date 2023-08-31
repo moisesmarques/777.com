@@ -84,6 +84,7 @@ const Game = () => {
         PIXI.Assets.add('settingsBtn', '../../assets/settings-button.png')
         PIXI.Assets.add('exitBtn', '../../assets/exit-button.png')
         PIXI.Assets.add('flare1', '../../assets/flare-light.png')
+        PIXI.Assets.add('chest1', '../../assets/chest1.png')
 
         // loading progress bar
         const loadingBar = new PIXI.Graphics();
@@ -142,7 +143,8 @@ const Game = () => {
                 'settingsBtn',
                 'exitBtn',
                 'wild',
-                'flare1'
+                'flare1',
+                'chest1'
                 ]).then((assets: any) => {
                 assetsObj = assets;
 
@@ -376,7 +378,7 @@ const Game = () => {
                 buttons.forEach((button) => button.setDisabled());
 
                 let config = {
-                    speed: 20,
+                    speed: 10,
                     until: Date.now() + 30000,
                     callback: () => {}
                 }
