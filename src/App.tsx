@@ -58,8 +58,7 @@ const App: React.FC = () => {
                       height: '100%',
                     }}>
                   <Routes />
-                  <span style={{fontFamily: 'Rubik Mono One', position: 'fixed', top: '-200px'}} >Load font...</span>
-                  <span style={{fontFamily: 'Rubik', position: 'fixed', top: '-200px'}} >Load font...</span>
+                  <span style={{fontFamily: 'Goddess', position: 'fixed', top: '-200px'}} >Load font...</span>
                 </Box>
                 <GlobalStyle />                
               </BrowserRouter>

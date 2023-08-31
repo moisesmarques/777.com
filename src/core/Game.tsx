@@ -83,6 +83,7 @@ const Game = () => {
         PIXI.Assets.add('plusBetBtn', '../../assets/plus-bet-button.png')
         PIXI.Assets.add('settingsBtn', '../../assets/settings-button.png')
         PIXI.Assets.add('exitBtn', '../../assets/exit-button.png')
+        PIXI.Assets.add('flare1', '../../assets/flare-light.png')
 
         // loading progress bar
         const loadingBar = new PIXI.Graphics();
@@ -141,11 +142,12 @@ const Game = () => {
                 'settingsBtn',
                 'exitBtn',
                 'wild',
+                'flare1'
                 ]).then((assets: any) => {
                 assetsObj = assets;
 
                 PIXI.BitmapFont.from('Font-WinAmount', {
-                    fontFamily: 'Rubik',
+                    fontFamily: 'Goddess',
                     fontSize: 36,
                     fill: '#ffba00',
                     strokeThickness: 3,
@@ -156,16 +158,18 @@ const Game = () => {
                 });
                 
                 PIXI.BitmapFont.from('Font-SuperWin', {
-                    fontFamily: 'Rubik Mono One',
-                    fontSize: 32,
+                    fontFamily: 'Goddess',
+                    fontSize: 60,
                     fill: '#ffba00', // dark yellow
+                    strokeThickness: 5,
+                    stroke: 0x000000,
                     align: 'center'
                 }, {
-                    chars: [['0', '9'], ['a', 'z'], ['A', 'Z'], "!@#$%^&*()~{}[],. "]
+                    chars: [['0', '9'], ['a', 'z'], ['A', 'Z'], ". "]
                 });
         
                 PIXI.BitmapFont.from('Font-LineNumber', {
-                    fontFamily: 'Rubik Mono One',
+                    fontFamily: 'Goddess',
                     fontSize: 18,
                     strokeThickness: 3,
                     stroke: 0x000000,
@@ -176,7 +180,7 @@ const Game = () => {
                 });
 
                 PIXI.BitmapFont.from('Font-LineAmount', {
-                    fontFamily: 'Rubik',
+                    fontFamily: 'Goddess',
                     fontSize: 24,
                     strokeThickness: 3,
                     stroke: 0x000000,
@@ -232,7 +236,7 @@ const Game = () => {
                 textWinAmount.scale.set(1, 1);
                 textWinAmount.text = `+ ${formatMoney(scoreboard.won)}`;
                 textWinAmount.x = (app.screen.width - textWinAmount.width) / 2;
-                textWinAmount.y = (app.screen.height) / 2 + 90;                
+                textWinAmount.y = (app.screen.height) / 2 + 100;                
                 textWinAmount.alpha = 1;
             }
 
@@ -338,7 +342,7 @@ const Game = () => {
                 betSettings.show()
             })
 
-            const superGanhoScreen = new SuperGanhoScreen(app);
+            const superGanhoScreen = new SuperGanhoScreen(app, assetsObj);
 
             function increaseBetHandler() {
                 let currentBetIndex = betOptions.indexOf(scoreboard.bet)
@@ -359,8 +363,6 @@ const Game = () => {
             }
 
             function spinHandler() {
-
-                reels.container.alpha = 1;
                 reelsWinResult.hide();
                 superGanhoScreen.hide();
                 hideWinAmount();
@@ -399,8 +401,6 @@ const Game = () => {
 
                     config.callback = () => {
                         scoreboard.update(credits, scoreboard.bet, scoreboard.won + amountWon);
-                        reels.container.alpha = 0.7;
-
                         if(win){
                             winAudio.play()
                             reelsWinResult.show(response.data.winningLines, response.data.amountPerLine, textures)

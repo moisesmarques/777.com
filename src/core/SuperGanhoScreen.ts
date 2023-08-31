@@ -1,14 +1,17 @@
 import * as PIXI from 'pixi.js';
 import { formatMoney } from './utils';
 import * as Conffeti from 'canvas-confetti';
+import { GlowFilter } from '@pixi/filter-glow';
 
 export default class SuperGanhoScreen {
     private readonly app: PIXI.Application;
     public container: PIXI.Container;
     private confetti: any;
+    private assets: any;
 
-    constructor(app: PIXI.Application) {
+    constructor(app: PIXI.Application, assets: any) {
         this.app = app;
+        this.assets = assets;
         this.container = new PIXI.Container();
         app.stage.addChild(this.container);
 
@@ -119,7 +122,7 @@ export default class SuperGanhoScreen {
                 break;
             case 'mega':
                 textWin = 'Mega Ganho!';
-                winEffect = () => Array(5).fill(0).forEach((_, idx) => setTimeout(confettis, idx*100))
+                winEffect = () => Array(10).fill(0).forEach((_, idx) => setTimeout(confettis, idx*100))
                 break
             case 'ultra':
                 textWin = 'Ultra Ganho!';
@@ -136,14 +139,42 @@ export default class SuperGanhoScreen {
         textAmount.x = (appWidth - textAmount.width) / 2;
         textAmount.y = (appHeight) / 2 + 20;
 
+        let flare = new PIXI.Sprite(this.assets['flare1']);
+        flare.anchor.set(0.5);
+        flare.x = appWidth / 2;
+        flare.y = appHeight / 2;
+        flare.scale.set(2);
+        this.container.addChild(flare);
+
+        // make it rotate
+        this.app.ticker.add(() => {
+            flare.rotation += 0.01;
+            // make it expand and contract
+            flare.scale.x = 2 + Math.sin(flare.rotation) * 0.2;
+            flare.scale.y = 2 + Math.cos(flare.rotation) * 0.2;
+            // add a bit of bounce
+            text.y = (appHeight) / 2 - text.height + Math.sin(flare.rotation) * 10;
+            textAmount.y = (appHeight) / 2 + 20 + Math.sin(flare.rotation) * 10;
+
+        });
 
         // a black rectangle to cover the reels
-        let rectWidth = this.app.screen.width
-        let rectHeight = text.height * 5
+        let radius = this.app.screen.width/2
+
         const bg = new PIXI.Graphics();
-        bg.beginFill(0x000000);
-        bg.drawRect((appWidth - rectWidth) / 2, (appHeight-rectHeight) / 2, rectWidth, rectHeight);
+        bg.beginFill(0xffffff);
+        bg.drawCircle(appWidth / 2, appHeight / 2, radius);
         bg.endFill();
+        bg.alpha = 0;
+
+        let glowFilter = new GlowFilter({
+            distance: 10,
+            outerStrength: 5,
+            color: 0xffffff,
+        });
+
+        text.filters = [glowFilter]
+        textAmount.filters = [glowFilter]
 
         this.container.addChild(bg, text, textAmount);
 

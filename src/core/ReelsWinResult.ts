@@ -28,7 +28,15 @@ export default class ReelsWinResult {
             [2,4,6]
         ]
 
+        // generate a overlay
+        const overlay = new PIXI.Graphics();
+        overlay.beginFill(0x000000, 0.5);
+        overlay.drawRect(0, 0, this.reelWidth * this.numberOfRows, this.rowHeight * this.numberOfRows);
+        overlay.endFill();
+        this.container.addChild(overlay);
+
         winningLines.forEach(line => this.generateWinningLine(line))
+
         // show symbols for winning line
         const symbolsContainer = new PIXI.Container();
 
@@ -47,28 +55,40 @@ export default class ReelsWinResult {
 
         winningLines.forEach((line) => this.generateWinningLineText(line, amountPerLine[line]))
 
+        // generate winning line text for total amount
+        let totalAmount = amountPerLine.reduce((a, b) => a + b, 0)
+        this.generateWinningLineText(amountPerLine.length, totalAmount)
+
         // animate and toggle winning line symbols
         let lineIndex = 0
-        let showingLine = winningLines[lineIndex]
 
-        symbolsByLine[showingLine].forEach(symbol => (symbolsContainer.getChildAt(symbol) as PIXI.Sprite).visible = true)
-        this.linesGraphic[lineIndex].visible = true
-        // alternate between showing and hiding symbols for each line
-        this.resultInterval = setInterval(() => {
-            symbolsByLine[showingLine].forEach(symbol => (symbolsContainer.getChildAt(symbol) as PIXI.Sprite).visible = false)
-            this.linesGraphic[lineIndex].visible = false
-            this.amountsWinText[lineIndex].visible = false
-            lineIndex++
-            if(lineIndex === winningLines.length)
+        const animateWinningResult = () => {
+            // hide all symbols and lines
+            symbolsByLine.forEach(line => line.forEach(symbol => (symbolsContainer.getChildAt(symbol) as PIXI.Sprite).visible = false))
+            this.linesGraphic.forEach(line => line.visible = false)
+            this.amountsWinText.forEach(line => line.visible = false)
+
+            if(lineIndex === winningLines.length){
                 lineIndex = 0
-            showingLine = winningLines[lineIndex]
-            symbolsByLine[showingLine].forEach(symbol => (symbolsContainer.getChildAt(symbol) as PIXI.Sprite).visible = true)
-            this.linesGraphic[lineIndex].visible = true
-            this.amountsWinText[lineIndex].visible = true
-        }, 1000)      
-        
-    }
+                //show sum of winning lines
+                winningLines.forEach( (winLine, idx) => {
+                    symbolsByLine[winLine].forEach(symbol => (symbolsContainer.getChildAt(symbol) as PIXI.Sprite).visible = true)    
+                    this.linesGraphic[idx].visible = true
+                })
+                this.amountsWinText[this.amountsWinText.length-1].visible = true
+            }else{
+                //show winning line
+                symbolsByLine[winningLines[lineIndex]].forEach(symbol => (symbolsContainer.getChildAt(symbol) as PIXI.Sprite).visible = true)
+                this.linesGraphic[lineIndex].visible = true
+                this.amountsWinText[lineIndex].visible = true
+                lineIndex++
+            }
+        }
 
+        animateWinningResult();
+        // alternate between showing and hiding symbols for each line
+        this.resultInterval = setInterval(animateWinningResult, 1000)
+    }
 
     hide(){
         this.resultInterval && clearInterval(this.resultInterval)
@@ -84,7 +104,7 @@ export default class ReelsWinResult {
 
         let lineY = 0;
 
-        if([0,3,4].includes(lineNumber)){
+        if([0,3,4,5].includes(lineNumber)){
             lineY = this.rowHeight + this.rowHeight / 2 // center
         } else if(lineNumber == 1){
             lineY = this.rowHeight / 2 // first

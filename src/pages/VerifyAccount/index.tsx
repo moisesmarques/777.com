@@ -6,7 +6,6 @@ import { toast } from 'react-toastify';
 import { UserContext, UserState } from '../../App';
 import { Box, Button, Container, TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-const logo = require('../../assets/logo512.png')
 
 type VerifyForm = {
   code: string;
