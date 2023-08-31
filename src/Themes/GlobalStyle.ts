@@ -119,9 +119,21 @@ export default createGlobalStyle`
     margin-bottom: 10px;
   }
 
-  .ul li span{
+  .span-paytable li span{
     display: block;
     color: #ffcc00;
     text-align: center;
+  }
+
+  .span-icons li{
+    margin-bottom: 32px;
+    margin-left: 48px;
+    position: relative;
+  }
+
+  .span-icons li img{
+    position: absolute;
+    left: -64px;
+
   }
 `;

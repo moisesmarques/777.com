@@ -235,7 +235,7 @@ const Withdraw = () => {
                             <li>Wild symbol substitues for all symbols.</li>
                         </ul>
                         <h3>Paytable</h3>
-                        <ol className='ul' style={{display: 'flex', flexWrap: 'wrap', gap: '40px', listStyle: 'none'}}>                            
+                        <ol className='ul span-paytable' style={{display: 'flex', flexWrap: 'wrap', gap: '40px', listStyle: 'none'}}>                            
                             <li><img src="/assets/banana.png" width="48"/><span>3</span></li>
                             <li><img src="/assets/grape.png" width="48"/><span>5</span></li>
                             <li><img src="/assets/lemon.png" width="48"/><span>8</span></li>                            
@@ -259,16 +259,38 @@ const Withdraw = () => {
                             <li><img src="/assets/line5.png" width="48"/></li>
                         </ol>                        
                         <h3>Main Game</h3>
-                        <ul className='ul'>
-                            <li>Spin: Tap to start spin at the current Bet Lines and Bet Size.</li>
-                            <li>Minus: Tap to reduce the Bet Amount.</li>
-                            <li>Plus: Tap to increase the Bet Amount.</li>
-                            <li>Wallet Balance: Displays the current wallet balance.</li>
-                            <li>Bet Amount: Tab to display the Bet Options screen.</li>
-                            <li>win Amount: Displays the spin win result.</li>
-                            <li>Exit: Ends user session.</li>
-                            <li>Settings: Tap to display the settings page.</li>
-                            <li>Close: Close the screen and return to Main Game.</li>
+                        <ul className='ul span-icons'>
+                            <li>
+                                <img src="/assets/play-button.png" width="32"/>
+                                <span>Spin: Tap to start spin at the current Bet Lines and Bet Size.</span></li>
+                            <li>
+                                <img src="/assets/minus-bet-button.png" width="32"/>
+                                <span>Minus: Tap to reduce the Bet Amount.</span>
+                            </li>
+                            <li>
+                                <img src="/assets/plus-bet-button.png" width="32"/>
+                                <span>Plus: Tap to increase the Bet Amount.</span>
+                            </li>
+                            <li>
+                                <img src="/assets/scoreboard-credits.png" width="32"/>
+                                <span>Wallet Balance: Displays the current wallet balance.</span>
+                            </li>
+                            <li>
+                                <img src="/assets/scoreboard-bet.png" width="32"/>
+                                <span>Bet Amount: Tab to display the Bet Options screen.</span>
+                            </li>
+                            <li>
+                                <img src="/assets/scoreboard-won.png" width="32"/>
+                                <span>win Amount: Displays the spin win result.</span>
+                            </li>
+                            <li>
+                                <img src="/assets/exit-button.png" width="32"/>
+                                <span>Exit: Ends user session.</span>
+                            </li>
+                            <li>
+                                <img src="/assets/settings-button.png" width="32"/>
+                                <span>Settings: Tap to display the settings page.</span>
+                            </li>
                         </ul>
                     </Box>
                     <Box hidden={currentTab !== 2}>
