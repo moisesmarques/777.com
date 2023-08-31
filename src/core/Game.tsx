@@ -399,7 +399,7 @@ const Game = () => {
 
                     config.callback = () => {
                         scoreboard.update(credits, scoreboard.bet, scoreboard.won + amountWon);
-                        reels.container.alpha = 0.3;
+                        reels.container.alpha = 0.7;
 
                         if(win){
                             winAudio.play()

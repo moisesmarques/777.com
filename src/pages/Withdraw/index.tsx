@@ -155,10 +155,11 @@ const Withdraw = () => {
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                         <Tabs value={currentTab} onChange={handleChange}>
                             <Tab label="Depositar" value={0} />
-                            <Tab label="Sacar" value={1} />
-                            <Tab label="Histórico de Saques" value={2} />
+                            <Tab label="Regras" value={1} />
+                            <Tab label="Sacar" value={2} />
+                            <Tab label="Histórico de Saques" value={3} />
                         </Tabs>
-                    </Box>
+                    </Box>                    
                     <Box hidden={currentTab !== 0}>
                     {tiers.map((tier) => (
                         <Card>
@@ -219,6 +220,58 @@ const Withdraw = () => {
                     ))}
                     </Box>
                     <Box hidden={currentTab !== 1}>
+                        <h3 style={{marginTop: '20px'}}>Fortune Jaguar</h3>
+                        <ul className='ul'>
+                            <li>Fortune Jaguar is a 3-reel, 3-row video slot featuring respins and x10 multiplier.</li>
+                            <li>The game is played with 5 bet lines (fixed) and bet size of 0.10 to 0.90.</li>
+                            <li>The Bet Amount is set using the Bet Options screen or Minus and Plus buttons.</li>
+                            <li>"Cash Wallet" displays the cash available for wager.</li>
+                            <li>Winning combinations and payouts are made according to the "Paytable".</li>
+                            <li>A bet line win in cash is equal to the value show in the "Paytable" multiplied by the bet size.</li>
+                            <li>Only the highest win per bet line is paid.</li>
+                            <li>Bet lines win if the winning symbols are in succession from the leftmost reel to the right.</li>
+                            <li>Simultaneous wins on different bet lines are added.</li>
+                            <li>All wins shown in cash.</li>
+                            <li>Wild symbol substitues for all symbols.</li>
+                        </ul>
+                        <h3>Paytable</h3>
+                        <ol className='ul' style={{display: 'flex', flexWrap: 'wrap', gap: '40px', listStyle: 'none'}}>                            
+                            <li><img src="/assets/banana.png" width="48"/><span>3</span></li>
+                            <li><img src="/assets/grape.png" width="48"/><span>5</span></li>
+                            <li><img src="/assets/lemon.png" width="48"/><span>8</span></li>                            
+                            <li><img src="/assets/pineaple.png" width="48"/><span>10</span></li>
+                            <li><img src="/assets/orange.png" width="48"/><span>25</span></li>
+                            <li><img src="/assets/cherry.png" width="48"/><span>100</span></li>
+                            <li><img src="/assets/wild.png" width="48"/><span>250</span></li>
+                        </ol> 
+                        <h3>x10 Multiplier</h3>
+                        <img src="/assets/x10-sample.png" width="128"/>
+                        <ul className='ul'>
+                            <li>When all symbols in the reels are involved in a win, the win will be multiplied by x10.</li>
+                            <li>Stand a chance to win up to 2500x of the total bet amount.</li>
+                        </ul>
+                        <h3>Winning Bet Lines</h3>
+                        <ol className='ul' style={{display: 'flex', flexWrap: 'wrap', gap: '40px', listStyle: 'decimal-leading-zero'}}>
+                            <li><img src="/assets/line1.png" width="48"/></li>
+                            <li><img src="/assets/line2.png" width="48"/></li>
+                            <li><img src="/assets/line3.png" width="48"/></li>                                
+                            <li><img src="/assets/line4.png" width="48"/></li>
+                            <li><img src="/assets/line5.png" width="48"/></li>
+                        </ol>                        
+                        <h3>Main Game</h3>
+                        <ul className='ul'>
+                            <li>Spin: Tap to start spin at the current Bet Lines and Bet Size.</li>
+                            <li>Minus: Tap to reduce the Bet Amount.</li>
+                            <li>Plus: Tap to increase the Bet Amount.</li>
+                            <li>Wallet Balance: Displays the current wallet balance.</li>
+                            <li>Bet Amount: Tab to display the Bet Options screen.</li>
+                            <li>win Amount: Displays the spin win result.</li>
+                            <li>Exit: Ends user session.</li>
+                            <li>Settings: Tap to display the settings page.</li>
+                            <li>Close: Close the screen and return to Main Game.</li>
+                        </ul>
+                    </Box>
+                    <Box hidden={currentTab !== 2}>
                         <form onSubmit={handleSubmit(data => withdraw(data))}>
                             <Box sx={{display: 'flex', flexDirection: 'column', p: 1, gap: 2}}>                        
                                 <Select
@@ -256,7 +309,7 @@ const Withdraw = () => {
                             </Box>                    
                         </form>
                     </Box>
-                    <Box hidden={currentTab !== 2}>
+                    <Box hidden={currentTab !== 3}>
                         <Table sx={{ width: '100%'}} aria-label="simple table">
                             <TableHead>
                             <TableRow>

@@ -107,4 +107,21 @@ export default createGlobalStyle`
     filter: blur(4px);
     opacity: 0.3;
   }
+
+  .ul {
+    font-size: 12px;
+    color: #e0e0e0;
+    padding: 20px;
+    list-style: square;
+  }
+
+  .ul li {
+    margin-bottom: 10px;
+  }
+
+  .ul li span{
+    display: block;
+    color: #ffcc00;
+    text-align: center;
+  }
 `;
