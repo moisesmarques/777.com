@@ -34,10 +34,6 @@ export default class SuperGanhoScreen {
         setTimeout(() => this.generate(this.app.screen.width, this.app.screen.height, type, amount), 500)        
     }
 
-    hide() {
-        this.container.removeChildren();
-    }
-
     private generate(appWidth: number, 
         appHeight: number,
         type: 'big' | 'super' | 'mega' | 'ultra', 
@@ -147,7 +143,7 @@ export default class SuperGanhoScreen {
         this.container.addChild(flare);
 
         // make it rotate
-        this.app.ticker.add(() => {
+        let animateTick = () => {
             flare.rotation += 0.01;
             // make it expand and contract
             flare.scale.x = 2 + Math.sin(flare.rotation) * 0.2;
@@ -156,7 +152,9 @@ export default class SuperGanhoScreen {
             text.y = (appHeight) / 2 - text.height + Math.sin(flare.rotation) * 10;
             textAmount.y = (appHeight) / 2 + 20 + Math.sin(flare.rotation) * 10;
 
-        });
+        }
+
+        this.app.ticker.add(animateTick);
 
         // a black rectangle to cover the reels
         let radius = this.app.screen.width/2
@@ -197,7 +195,8 @@ export default class SuperGanhoScreen {
         flare.interactive = true;
         flare.on('pointerdown', () => {
             this.app.ticker.remove(tick)
-            this.hide()
+            this.app.ticker.remove(animateTick)
+            this.container.removeChildren();
         })   
     }   
     

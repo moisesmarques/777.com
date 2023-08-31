@@ -8,8 +8,7 @@ export default class ReelsWinResult {
     public numberOfRows = 3;
     public reelWidth = 0;
     public rowHeight = 100;
-    // public linesGraphic: Array<PIXI.Graphics> = [];
-    // private amountsWinText: Array<PIXI.BitmapText> = [];
+    private intervals = new Array<NodeJS.Timeout>();
 
     constructor(app: PIXI.Application, textures: Array<Array<PIXI.Texture>>) {        
         this.app = app;
@@ -88,10 +87,11 @@ export default class ReelsWinResult {
 
         animateWinningResult(winningLinesGraphic, amountsWinText);
         // alternate between showing and hiding symbols for each line
-        setInterval( () => animateWinningResult(winningLinesGraphic, amountsWinText), 1000)
+        this.intervals.push(setInterval( () => { animateWinningResult(winningLinesGraphic, amountsWinText) }, 1000))
     }
 
     hide(){
+        this.intervals.forEach(interval => clearInterval(interval))
         this.container.removeChildren()
     }
 

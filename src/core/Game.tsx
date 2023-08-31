@@ -367,7 +367,6 @@ const Game = () => {
 
             function spinHandler() {
                 reelsWinResult.hide();
-                superGanhoScreen.hide();
                 hideWinAmount();
 
                 scoreboard.update(scoreboard.credits, scoreboard.bet, 0)
@@ -420,7 +419,9 @@ const Game = () => {
                                 showWinAmount()
                             }
                         }
-                        buttons.forEach((button) => button.setEnabled());                        
+                        setTimeout(() => {
+                            buttons.forEach((button) => button.setEnabled());
+                        }, 500)
                     }
 
                     config.until = 0;
