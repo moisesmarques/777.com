@@ -4,8 +4,7 @@ import Reel from './Reel';
 export default class ReelsContainer {
 
     public readonly reels: Array<Reel> = [];
-    public readonly container: PIXI.Container;    
-    public spinAudio: HTMLAudioElement;
+    public readonly container: PIXI.Container;
     public NUMBER_OF_REELS = 3;
     public NUMBER_OF_ROWS = 3;
     public REEL_WIDTH = 0;
@@ -15,8 +14,6 @@ export default class ReelsContainer {
     constructor(app: PIXI.Application, textures: Array<Array<PIXI.Texture>>) {
         this.container = new PIXI.Container();
         this.REEL_WIDTH = app.screen.width * 0.85 / this.NUMBER_OF_REELS;
-        this.spinAudio = new Audio('../../assets/spin.mp3')       
-
 
         for (let i = 0; i < this.NUMBER_OF_REELS; i++) {
             const reel = new Reel(app, this);
@@ -37,8 +34,6 @@ export default class ReelsContainer {
     async spin(config: any) {
         
         const reelsToSpin = [...this.reels];
-        this.spinAudio.currentTime = 0
-        this.spinAudio.play()
         let blurFilter = new PIXI.BlurFilter()
         blurFilter.blurX = 0
         blurFilter.blurY = 4
@@ -53,8 +48,6 @@ export default class ReelsContainer {
             if(reelsToSpin.length === 0)
                 break;
         }        
-
-        this.spinAudio.pause()
         config.callback()
     }
 }

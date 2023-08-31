@@ -47,6 +47,7 @@ const App: React.FC = () => {
               <ApiInterceptor/>
               <CssBaseline />
               <BrowserRouter>
+                <div id='background'></div>
                 <Box id="main"
                     sx={{
                       display: 'flex',
@@ -58,6 +59,7 @@ const App: React.FC = () => {
                     }}>
                   <Routes />
                   <span style={{fontFamily: 'Rubik Mono One', position: 'fixed', top: '-200px'}} >Load font...</span>
+                  <span style={{fontFamily: 'Rubik', position: 'fixed', top: '-200px'}} >Load font...</span>
                 </Box>
                 <GlobalStyle />                
               </BrowserRouter>

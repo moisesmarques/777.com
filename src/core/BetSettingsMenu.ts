@@ -60,8 +60,8 @@ export default class BetSettingsMenu {
 
         const style = new PIXI.TextStyle({
             fontFamily: 'Arial',
-            fontSize: 14,
-            fill: 0xffffff         
+            fontSize: 16,
+            fill: 0xffffff,
         });
 
         const createText = (bet: number, lines: number, y: number) => {
@@ -86,21 +86,31 @@ export default class BetSettingsMenu {
                 this.hide();
             });
 
-            let itemText = new PIXI.Text(`${formatMoney(bet)} \t\t\t\tx \t\t\t\t${lines} \t\t\t\t= \t\t\t\t${formatMoney(bet * lines)}`, style);
+            let tab = '\t\t\t\t\t\t\t\t'
+            let totalBet = formatMoney(bet * lines);
+            if(totalBet.length < 5){
+                totalBet = '\t\t' + totalBet
+            }
+
+            let itemText = new PIXI.Text(`${formatMoney(bet)}${tab}x${tab}${lines}${tab}=${tab}${totalBet}`, style);
             itemText.resolution = 2;
             itemText.anchor.set(0.5);
             itemText.x = item.width / 2;
             itemText.y = item.height / 2;
-
             item.addChild(itemText);
             item.y = y;
             return item;
         }
 
-        let itemY = 20;
-        let items = betOptions.map(opt => createText(opt/5, 5, itemY += 40));
+        let itemsHeaderText = new PIXI.Text(`\t\tBet Size\t\t\t\t\t\t\t\t\t\t\t\t\tLines\t\t\t\t\t\t\t\t\t\t\t\tBet Amount`, style);
+        itemsHeaderText.resolution = 2;
+        itemsHeaderText.anchor.set(0.5);
+        itemsHeaderText.x = app.screen.width / 2;
+        itemsHeaderText.y = 70;
 
-        this.container.addChild(bg, header, ...items);
+        let itemY = 50;
+        let items = betOptions.map(opt => createText(opt/5, 5, itemY += 40));
+        this.container.addChild(bg, header, itemsHeaderText, ...items);
         this.container.y = app.screen.height;
         app.stage.addChild(this.container);
     }

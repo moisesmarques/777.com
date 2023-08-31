@@ -35,7 +35,7 @@ export default class ReelsWinResult {
         for (let j = 0; j < this.numberOfRows; j++) {
             for (let i = 0; i < this.numberOfReels; i++) {
                 const symbol = new PIXI.Sprite(textures[i][j]);            
-                symbol.scale.set(0.6);
+                symbol.scale.set(0.7);
                 symbol.anchor.set(0.5);
                 symbol.x = this.reelWidth / 2 + i * this.reelWidth;
                 symbol.y = this.rowHeight / 2 + j * this.rowHeight;
@@ -92,6 +92,14 @@ export default class ReelsWinResult {
             lineY = this.rowHeight * 2 + this.rowHeight / 2 // last
         }
 
+        let glowFilter = new GlowFilter({
+            distance: 10,
+            outerStrength: 5,
+            quality: 0.2,
+            color: 0xffffff,
+        });
+        text.filters = [glowFilter]
+
         text.y = lineY
         text.visible = false
         this.container.addChild(text)
@@ -131,7 +139,7 @@ export default class ReelsWinResult {
 
         let text = new PIXI.BitmapText( `${winLine+1}`, { fontName: 'Font-LineNumber' });
         text.anchor.set(0.5)
-        text.x = xstart-20
+        text.x = xstart-15
         text.y = ystart
         this.container.addChild(text)
 

@@ -51,9 +51,9 @@ const VerifyAccount = () => {
   
   return (
     <Box sx={{display: 'flex', flexDirection: 'column', width: '360px', height: '100%'}}>
-        <Box sx={{display: 'flex', flexDirection: 'column', mb: 2, mt: 4}}>
-          <img src={logo} alt="Logo" />
-        </Box>         
+        <Box sx={{display: 'flex', flexDirection: 'column', mb: 2, mt: 10, alignItems: 'center'}}>
+          <img src="/assets/logo-360.png" alt="Logo" width="360" height="360"/>
+        </Box>    
         <h4>Verificar conta</h4>
         <form onSubmit={handleSubmit(data => verifyAccount(data))}>
           <Box sx={{display: 'flex', flexDirection: 'column'}}>

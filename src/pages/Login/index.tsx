@@ -6,7 +6,6 @@ import { signin } from "../../services/userService";
 import { Box, Button, Container, TextField } from "@mui/material";
 import { UserContext, UserState } from "../../App";
 
-const logo = require('../../assets/logo512.png')
 const countryCode = '+55'
 
 export type LoginTypeForm = {
@@ -56,8 +55,8 @@ const Login = () => {
 
     return (
       <Box sx={{display: 'flex', flexDirection: 'column', width: '360px', height: '100%'}}>
-        <Box sx={{display: 'flex', flexDirection: 'column', mb: 2, mt: 4}}>
-          <img src={logo} alt="Logo" />
+        <Box sx={{display: 'flex', flexDirection: 'column', mb: 2, mt: 10, alignItems: 'center'}}>
+          <img src="/assets/logo-360.png" alt="Logo" width="360" height="360"/>
         </Box>          
         <h4>Log in</h4>
         <form onSubmit={handleSubmit( data => mutate(data))}>
