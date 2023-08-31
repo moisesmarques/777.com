@@ -51,6 +51,7 @@ const Game = () => {
             height: 740,
             eventMode: 'passive',
             backgroundAlpha: 0,
+            antialias: true,
             eventFeatures: {
                 move: true,
                 globalMove: false,

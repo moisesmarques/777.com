@@ -19,7 +19,10 @@ export default class ReelsWinResult {
     }
     
     async show(winningLines: Array<number>, amountPerLine: Array<number>, textures: Array<Array<PIXI.Texture>>){
+        setTimeout(() => this.generateResult(winningLines, amountPerLine, textures), 500)        
+    }
 
+    generateResult(winningLines: Array<number>, amountPerLine: Array<number>, textures: Array<Array<PIXI.Texture>>){
         let symbolsByLine = [
             [3,4,5],
             [0,1,2],
@@ -28,13 +31,10 @@ export default class ReelsWinResult {
             [2,4,6]
         ]
 
-        // delay for 500ms
-        await new Promise( (resolve, _) => setTimeout(resolve, 500))            
-
         // generate a overlay
         const overlay = new PIXI.Graphics();
         overlay.beginFill(0x000000, 0.5);
-        overlay.drawRect(0, 0, this.reelWidth * this.numberOfRows, this.rowHeight * this.numberOfRows);
+        overlay.drawRoundedRect(0, 0, this.reelWidth * this.numberOfRows, this.rowHeight * this.numberOfRows, 50);
         overlay.endFill();
         this.container.addChild(overlay);
 

@@ -31,9 +31,7 @@ export default class SuperGanhoScreen {
     }
 
     show(type: 'big' | 'super' | 'mega' | 'ultra', amount: number,) {
-        setTimeout(() => {
-            this.generate(this.app.screen.width, this.app.screen.height, type, amount);
-        }, 1000)
+        setTimeout(() => this.generate(this.app.screen.width, this.app.screen.height, type, amount), 500)        
     }
 
     hide() {
