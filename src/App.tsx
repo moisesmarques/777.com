@@ -59,21 +59,21 @@ const App: React.FC = () => {
                     }}>
                   <Routes />
                   <span style={{fontFamily: 'Goddess', position: 'fixed', top: '-200px'}} >Load font...</span>
+                  <ToastContainer
+                    position="top-right"
+                    autoClose={4000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    pauseOnHover
+                    theme={ 'light' }
+                    />
                 </Box>
                 <GlobalStyle />                
               </BrowserRouter>
             </QueryClientProvider>
-          <ToastContainer
-              position="top-right"
-              autoClose={4000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              pauseOnHover
-              theme={ 'light' }
-              />
         </ThemeProvider>
     </UserContext.Provider>
   );

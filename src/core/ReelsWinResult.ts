@@ -87,7 +87,8 @@ export default class ReelsWinResult {
 
         animateWinningResult(winningLinesGraphic, amountsWinText);
         // alternate between showing and hiding symbols for each line
-        this.intervals.push(setInterval( () => { animateWinningResult(winningLinesGraphic, amountsWinText) }, 1000))
+        if(winningLines.length > 1)
+            this.intervals.push(setInterval( () => { animateWinningResult(winningLinesGraphic, amountsWinText) }, 1000))
     }
 
     hide(){

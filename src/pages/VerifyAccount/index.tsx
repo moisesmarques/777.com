@@ -50,32 +50,34 @@ const VerifyAccount = () => {
   
   return (
     <Box sx={{display: 'flex', flexDirection: 'column', width: '360px', height: '100%'}}>
-        <Box sx={{display: 'flex', flexDirection: 'column', mb: 2, mt: 10, alignItems: 'center'}}>
+        <Box sx={{display: 'flex', flexDirection: 'column', mb: 2, mt: 6, alignItems: 'center'}}>
           <img src="/assets/logo-360.png" alt="Logo" width="360" height="360"/>
-        </Box>    
-        <h4>Verificar conta</h4>
-        <form onSubmit={handleSubmit(data => verifyAccount(data))}>
-          <Box sx={{display: 'flex', flexDirection: 'column'}}>
-            <TextField
-                label="Código de verificação"
-                maxLength={6}
-                placeholder="******"
-                variant="outlined"
-                error={!!errors.code}
-                {...register('code', { 
-                  required: 'Digite o código recebido por SMS',
-                })}
-              />
+        </Box>
+        <Box sx={{pl: 4, pr: 4}}>
+          <h4>Verificar conta</h4>
+          <form onSubmit={handleSubmit(data => verifyAccount(data))}>
+            <Box sx={{display: 'flex', flexDirection: 'column'}}>
+              <TextField
+                  label="Código de verificação"
+                  maxLength={6}
+                  placeholder="******"
+                  variant="outlined"
+                  error={!!errors.code}
+                  {...register('code', { 
+                    required: 'Digite o código recebido por SMS',
+                  })}
+                />
+            </Box>
+            <Box sx={{display: 'flex', flexDirection: 'column', mt: 2}}>
+              <Button sx={{ width: '100%'}} variant="contained" type="submit">Verificar</Button>
+          </Box>            
+          </form>
+          <Box sx={{display: 'flex', flexDirection: 'column', mt: 3}}>
+            <p style={{textAlign: 'center'}}>Ainda não recebeu o código?</p>
+            <Button onClick={() => sendOtp()} type="button">
+              Reenviar o código
+            </Button>
           </Box>
-          <Box sx={{display: 'flex', flexDirection: 'column', mt: 2}}>
-            <Button sx={{ width: '100%'}} variant="contained" type="submit">Verificar</Button>
-        </Box>            
-        </form>
-        <Box sx={{display: 'flex', flexDirection: 'column', mt: 3}}>
-          <p style={{textAlign: 'center'}}>Ainda não recebeu o código?</p>
-          <Button onClick={() => sendOtp()} type="button">
-            Reenviar o código
-          </Button>
         </Box>
       </Box>
 )}

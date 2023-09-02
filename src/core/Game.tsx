@@ -352,7 +352,12 @@ const Game = () => {
                 if(currentBetIndex >= betOptions.length - 1){
                     return;
                 }
+                
                 let nextBet = betOptions[currentBetIndex + 1]
+                if(nextBet > scoreboard.credits){
+                    return;
+                }
+
                 scoreboard.update(scoreboard.credits, nextBet, scoreboard.won)
             }
 
@@ -366,15 +371,16 @@ const Game = () => {
             }
 
             function spinHandler() {
+
+                if(scoreboard.bet > scoreboard.credits){
+                    toast.warning(`Você não possui créditos suficiente. Deposite mais créditos para continuar jogando.🚀`)
+                    return;
+                }
+
                 reelsWinResult.hide();
                 hideWinAmount();
 
                 scoreboard.update(scoreboard.credits, scoreboard.bet, 0)
-                if(scoreboard.bet > scoreboard.credits){
-                    toast.warning(`Insufficient funds. You have ${scoreboard.credits} credits`)
-                    return;
-                }
-
                 buttons.forEach((button) => button.setDisabled());
 
                 let config = {
@@ -402,7 +408,14 @@ const Game = () => {
                     reels.swapTextures(textures)                    
 
                     config.callback = () => {
-                        scoreboard.update(credits, scoreboard.bet, scoreboard.won + amountWon);
+                        scoreboard.update(credits, scoreboard.bet, amountWon);
+                        while(scoreboard.credits < scoreboard.bet){
+                            decreaseBetHandler()
+                            if(scoreboard.bet === betOptions[0]){
+                                break;
+                            }
+                        }
+
                         if(win){
                             winAudio.play()
                             reelsWinResult.show(response.data.winningLines, response.data.amountPerLine, textures)
@@ -418,10 +431,13 @@ const Game = () => {
                             } else {
                                 showWinAmount()
                             }
-                        }
-                        setTimeout(() => {
+                            setTimeout(() => {
+                                buttons.forEach((button) => button.setEnabled());
+                            }, 500)
+                        }else{
                             buttons.forEach((button) => button.setEnabled());
-                        }, 500)
+                        }
+                        
                     }
 
                     config.until = 0;

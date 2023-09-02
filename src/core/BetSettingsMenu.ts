@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import { formatMoney } from './utils';
 import Scoreboard from './Scoreboard';
+import { toast } from 'react-toastify';
 
 export default class BetSettingsMenu {
     public container: PIXI.Container;
@@ -82,7 +83,13 @@ export default class BetSettingsMenu {
             });
 
             item.on('pointerdown', () => {
-                scoreBoard.update(scoreBoard.credits, bet*lines, scoreBoard.won)
+                let betAmount = bet * lines;
+                if(scoreBoard.credits < betAmount){
+                    toast.warn('Créditos insuficientes');
+                    return;
+                }
+
+                scoreBoard.update(scoreBoard.credits, betAmount, scoreBoard.won)
                 this.hide();
             });
 
