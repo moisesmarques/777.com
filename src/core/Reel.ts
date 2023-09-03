@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import ReelsContainer from './ReelsContainer';
+import { AnimatedGIF } from '@pixi/gif';
 
 export default class Reel {
     
@@ -22,20 +23,23 @@ export default class Reel {
         this.NUMBER_OF_ROWS = this.reelsContainer.NUMBER_OF_ROWS;
     }
 
-    generate(position: number, textures: Array<PIXI.Texture>){
+    generate(position: number, symbols: Array<PIXI.Sprite>){
         for (let i = 0; i < this.NUMBER_OF_ROWS; i++) {
-            const symbol = new PIXI.Sprite(textures[i]);            
+            
+            const symbol = new PIXI.Sprite();
+            symbol.texture = symbols[i].texture;
+            symbol.anchor.set(0.5);
+            symbol.scale.set(0.7);
+
+            symbol.x = this.REEL_WIDTH / 2;
+            symbol.y = this.ROW_HEIGHT / 2;
+
             const slot = new PIXI.Container();
             slot.width = this.REEL_WIDTH;
             slot.height = this.ROW_HEIGHT;
 
-            // put symbol inside of slot and position it in the middle
-            symbol.scale.set(0.7);
-            symbol.anchor.set(0.5);
-            symbol.x = this.REEL_WIDTH / 2;
-            symbol.y = this.ROW_HEIGHT / 2;
             slot.addChild(symbol);
-
+            
             slot.x =  position * this.REEL_WIDTH;
             slot.y = i * this.ROW_HEIGHT;
             this.slots.push(slot);
@@ -56,8 +60,9 @@ export default class Reel {
                         slot.y -= this.REEL_HEIGHT + this.ROW_HEIGHT/4;
                     }
 
-                    if(this.slots[0].y === 0)
-                        done = true;
+                    if(this.slots[0].y === 0){
+                        done = true;                        
+                    }
                 })
                 
                 if (done) {

@@ -8,10 +8,12 @@ export default class SuperGanhoScreen {
     public container: PIXI.Container;
     private confetti: any;
     private assets: any;
+    private x10: PIXI.Sprite;
 
-    constructor(app: PIXI.Application, assets: any) {
+    constructor(app: PIXI.Application, assets: any, x10: PIXI.Sprite) {
         this.app = app;
         this.assets = assets;
+        this.x10 = x10;
         this.container = new PIXI.Container();
         app.stage.addChild(this.container);
 
@@ -30,13 +32,13 @@ export default class SuperGanhoScreen {
         });
     }
 
-    show(type: 'big' | 'super' | 'mega' | 'ultra', amount: number,) {
+    show(type: 'big' | 'super' | 'mega' | 'ultra', amount: number) {
         setTimeout(() => this.generate(this.app.screen.width, this.app.screen.height, type, amount), 500)        
     }
 
     private generate(appWidth: number, 
         appHeight: number,
-        type: 'big' | 'super' | 'mega' | 'ultra', 
+        type: 'big' | 'super' | 'mega' | 'ultra',         
         amount: number = 0) {
 
         const stars = () => {
@@ -156,9 +158,6 @@ export default class SuperGanhoScreen {
 
         this.app.ticker.add(animateTick);
 
-        // a black rectangle to cover the reels
-        let radius = this.app.screen.width/2
-
         let glowFilter = new GlowFilter({
             distance: 10,
             outerStrength: 5,
@@ -197,6 +196,8 @@ export default class SuperGanhoScreen {
             this.app.ticker.remove(tick)
             this.app.ticker.remove(animateTick)
             this.container.removeChildren();
+            this.x10.alpha = 0;
+            this.x10.scale.set(1);
         })   
     }   
     

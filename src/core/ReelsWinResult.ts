@@ -1,6 +1,7 @@
 import { GlowFilter } from '@pixi/filter-glow';
 import * as PIXI from 'pixi.js';
 import { formatMoney } from './utils';
+import { AnimatedGIF } from '@pixi/gif';
 export default class ReelsWinResult {
     private readonly app: PIXI.Application;
     public readonly container: PIXI.Container;    
@@ -10,17 +11,17 @@ export default class ReelsWinResult {
     public rowHeight = 100;
     private intervals = new Array<NodeJS.Timeout>();
 
-    constructor(app: PIXI.Application, textures: Array<Array<PIXI.Texture>>) {        
+    constructor(app: PIXI.Application) {        
         this.app = app;
         this.container = new PIXI.Container();
         this.reelWidth = app.screen.width * 0.85 / this.numberOfReels;        
     }
     
-    async show(winningLines: Array<number>, amountPerLine: Array<number>, textures: Array<Array<PIXI.Texture>>){
-        setTimeout(() => this.generateResult(winningLines, amountPerLine, textures), 500)        
+    async show(winningLines: Array<number>, amountPerLine: Array<number>, symbols: string[][], animatedSymbols: any){
+        setTimeout(() => this.generateResult(winningLines, amountPerLine, symbols, animatedSymbols), 500)        
     }
 
-    generateResult(winningLines: Array<number>, amountPerLine: Array<number>, textures: Array<Array<PIXI.Texture>>){
+    generateResult(winningLines: Array<number>, amountPerLine: Array<number>, symbols: string[][], animatedSymbols: any){
         let symbolsByLine = [
             [3,4,5],
             [0,1,2],
@@ -42,13 +43,13 @@ export default class ReelsWinResult {
 
         for (let j = 0; j < this.numberOfRows; j++) {
             for (let i = 0; i < this.numberOfReels; i++) {
-                const symbol = new PIXI.Sprite(textures[i][j]);            
-                symbol.scale.set(0.7);
-                symbol.anchor.set(0.5);
-                symbol.x = this.reelWidth / 2 + i * this.reelWidth;
-                symbol.y = this.rowHeight / 2 + j * this.rowHeight;
-                symbol.visible = false
-                symbolsContainer.addChild(symbol);
+                let animatedSymbol = new PIXI.Sprite(animatedSymbols[symbols[i][j]].texture)
+                animatedSymbol.scale.set(0.7);
+                animatedSymbol.anchor.set(0.5);          
+                animatedSymbol.x = this.reelWidth/2 + i * this.reelWidth;
+                animatedSymbol.y = this.rowHeight/2 + j * this.rowHeight;
+                animatedSymbol.visible = false
+                symbolsContainer.addChild(animatedSymbol);
             }
         }
         this.container.addChild(symbolsContainer);
@@ -60,7 +61,7 @@ export default class ReelsWinResult {
         amountsWinText.push(this.generateWinningLineText(amountPerLine.length, totalAmount))
 
         // animate and toggle winning line symbols
-        let lineIndex = winningLines.length
+        let lineIndex = 0
 
         const animateWinningResult = (winningLinesGraphic: Array<PIXI.Graphics>, amountsWinText: Array<PIXI.BitmapText>) => {
             // hide all symbols and lines
