@@ -91,12 +91,17 @@ export default createGlobalStyle`
   }
 
   #background {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: url(/assets/full-background.png) no-repeat center center fixed;
-    z-index: -1;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: url(/assets/full-background.png);
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
     background-size: cover;
+    z-index: -1;
     filter: blur(4px);
     opacity: 0.3;
   }

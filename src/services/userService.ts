@@ -11,15 +11,14 @@ export type SigninRequest = {
 
 export type SigninVerifyRequest = {
   phone: string;
-  otp: string;
+  code: string;
 }
 
 export type SigninVerifyResponse = {
   accessToken: string;
   username: string;
-  credits: number;  
-  bet: number;
-  win: number;
+  credits: number;
+  referrer: boolean;
 }
 
 export const signin = (request: SigninRequest): Promise<any> => {

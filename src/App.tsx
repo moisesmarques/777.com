@@ -15,6 +15,7 @@ export type UserState = {
   username: string;
   phone: string;  
   token: string;
+  referrer: boolean;
   set: (props: UserState) => void;
 }
 
@@ -25,6 +26,7 @@ const initialUserState = (localStorageUser ?
     phone: "",    
     username: "",
     token: "",
+    referrer: false,
     set: (props: UserState) => {}
   }) as UserState;
 
@@ -47,7 +49,6 @@ const App: React.FC = () => {
               <ApiInterceptor/>
               <CssBaseline />
               <BrowserRouter>
-                <div id='background'></div>
                 <Box id="main"
                     sx={{
                       display: 'flex',
@@ -59,7 +60,10 @@ const App: React.FC = () => {
                     }}>
                   <Routes />
                   <span style={{fontFamily: 'Goddess', position: 'fixed', top: '-200px'}} >Load font...</span>
-                  <ToastContainer
+                </Box>
+                <GlobalStyle />                
+              </BrowserRouter>
+              <ToastContainer
                     position="top-right"
                     autoClose={4000}
                     hideProgressBar={false}
@@ -70,9 +74,6 @@ const App: React.FC = () => {
                     pauseOnHover
                     theme={ 'light' }
                     />
-                </Box>
-                <GlobalStyle />                
-              </BrowserRouter>
             </QueryClientProvider>
         </ThemeProvider>
     </UserContext.Provider>

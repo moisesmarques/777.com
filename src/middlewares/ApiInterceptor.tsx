@@ -19,10 +19,7 @@ const ApiInterceptor = () => {
       setIsLoading(true)
       return r;
     }
-    , e => {
-      setIsLoading(false)
-      return Promise.reject(e);
-    })
+    , e => e)
 
   api.interceptors.response.use(
     r => {

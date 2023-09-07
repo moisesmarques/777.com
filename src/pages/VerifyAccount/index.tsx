@@ -1,49 +1,45 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { useForm } from "react-hook-form";
-import { useMutation } from '@tanstack/react-query';
 import { signin, signinVerify } from '../../services/userService';
 import { toast } from 'react-toastify';
 import { UserContext, UserState } from '../../App';
-import { Box, Button, Container, TextField } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { Box, Button, TextField } from '@mui/material';
 
 type VerifyForm = {
   code: string;
 }
 
-const VerifyAccount = () => {  
+const VerifyAccount = () => {
   const userState = useContext(UserContext);
-  const navigate = useNavigate();
   
-  const { mutate: verifyAccount } = useMutation({
-    mutationFn: (values: VerifyForm) => signinVerify({
+  const verify = (values: VerifyForm) => signinVerify({
       phone: userState.phone,
-      otp: values.code
-    }),
-    onSuccess: (data) => {
+      code: values.code
+    }).then((data) => {
       userState.set({ 
         token: data.accessToken,
         username: data.username,
+        referrer: data.referrer
       } as UserState)
       window.location.replace('/')
-    }
+  }).catch((error) => {
+    let message = error.response?.data?.code
+    if (message === 'INVALID_OTP')
+      toast.error('Código de verificação inválido')
+    else
+      toast.error(error.response?.data?.code || 'Ops...')
   })
 
-  const { mutate: sendOtp } = useMutation({
-    mutationFn: (values) => {
-      return signin({ phone: userState.phone})
-    },
-    onSuccess: (data) => {
-      toast.info('Código reenviado com sucesso')
-    }
+  const sendOtp = () => signin({ phone: userState.phone}).then(() => {
+    toast.info('Código reenviado com sucesso')
+  }).catch((error) => {
+    toast.error(error.response?.data?.code || 'Ops...')
   })
 
   const { 
     register,
     handleSubmit,
-    formState: { errors },
-    setValue,
-    watch } = useForm<VerifyForm>({
+    formState: { errors }} = useForm<VerifyForm>({
     mode: 'onSubmit',
     reValidateMode: 'onBlur',
   });
@@ -55,7 +51,7 @@ const VerifyAccount = () => {
         </Box>
         <Box sx={{pl: 4, pr: 4}}>
           <h4>Verificar conta</h4>
-          <form onSubmit={handleSubmit(data => verifyAccount(data))}>
+          <form onSubmit={handleSubmit(data => verify(data))}>
             <Box sx={{display: 'flex', flexDirection: 'column'}}>
               <TextField
                   label="Código de verificação"
