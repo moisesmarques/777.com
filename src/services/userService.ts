@@ -19,6 +19,7 @@ export type SigninVerifyResponse = {
   username: string;
   credits: number;
   referrer: boolean;
+  key: string;
 }
 
 export const signin = (request: SigninRequest): Promise<any> => {

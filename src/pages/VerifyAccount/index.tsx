@@ -19,7 +19,8 @@ const VerifyAccount = () => {
       userState.set({ 
         token: data.accessToken,
         username: data.username,
-        referrer: data.referrer
+        referrer: data.referrer,
+        key: data.key
       } as UserState)
       window.location.replace('/')
   }).catch((error) => {

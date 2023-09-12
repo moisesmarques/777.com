@@ -16,6 +16,7 @@ export type UserState = {
   phone: string;  
   token: string;
   referrer: boolean;
+  key: string;
   set: (props: UserState) => void;
 }
 
@@ -27,6 +28,7 @@ const initialUserState = (localStorageUser ?
     username: "",
     token: "",
     referrer: false,
+    key: '',
     set: (props: UserState) => {}
   }) as UserState;
 

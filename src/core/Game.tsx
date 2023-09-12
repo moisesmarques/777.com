@@ -5,7 +5,7 @@ import SuperGanhoScreen from './SuperGanhoScreen';
 import Button from './Button';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { formatMoney } from './utils';
+import { formatMoney, decryptText } from './utils';
 import { UserState } from '../App';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
@@ -13,7 +13,6 @@ import React from 'react';
 import {GlowFilter} from '@pixi/filter-glow';
 import ReelsWinResult from './ReelsWinResult';
 import BetSettingsMenu from './BetSettingsMenu';
-import { AnimatedGIF } from '@pixi/gif';
 
 const Game = () => {
     const navigate = useNavigate();
@@ -420,100 +419,104 @@ const Game = () => {
                 api.post('/game/spin', {
                     bet: scoreboard.bet
                 }).then((response) => {
-                    const credits = response.data.credits;
-                    const win = response.data.win;
-                    const amountWon = response.data.amountWon;
-                    const x10 = response.data.x10;
+                    decryptText(response.data, userState.key).then((decryptedText:string) => {
+                        const data = JSON.parse(decryptedText)
+                        const credits = data.credits;
+                        const win = data.win;
+                        const amountWon = data.amountWon;
+                        const x10 = data.x10;
 
-                    let  x10Tick = () => {}                    
+                        let  x10Tick = () => {}                    
 
-                    if(x10){
-                        let blink = true;
-                        x10Sprite.scale.set(1);
+                        if(x10){
+                            let blink = true;
+                            x10Sprite.scale.set(1);
 
-                        x10Tick = () => {
-                            // blink x10Sprite                            
-                            if(blink)
-                                x10Sprite.alpha += 0.1
-                            else
-                                x10Sprite.alpha -= 0.1
+                            x10Tick = () => {
+                                // blink x10Sprite                            
+                                if(blink)
+                                    x10Sprite.alpha += 0.1
+                                else
+                                    x10Sprite.alpha -= 0.1
 
-                            if(x10Sprite.alpha >= 1){
-                                blink = false;
-                            }
-                            if(x10Sprite.alpha <= 0){
-                                blink = true;
-                            }
-                        }
-                        app.ticker.add(x10Tick)
-                        config.until = 3000;
-                        config.speed = 30;
-                        config.x10 = true;
-                    } else {
-                        config.until = 0;
-                    }
-
-                    let swapSymbols = (response.data.symbols as string[][]).map((reel: Array<string>) => {
-                        return reel.map((texture) => {
-                            return symbols[texture]
-                        })
-                    })
-                    
-                    reels.swapTextures(swapSymbols)                    
-
-                    config.callback = () => {
-                        scoreboard.update(credits, scoreboard.bet, amountWon);
-                        while(scoreboard.credits < scoreboard.bet){
-                            decreaseBetHandler()
-                            if(scoreboard.bet === betOptions[0]){
-                                break;
-                            }
-                        }
-                        let enableButtonTimeout = 0
-                        if(win){
-                            winAudio.play()
-                            reelsWinResult.show(response.data.winningLines,
-                                response.data.amountPerLine, 
-                                response.data.symbols as string[][], symbols)
-
-                            if (amountWon >= 100 * scoreboard.bet){
-                                superGanhoScreen.show('ultra', amountWon)
-                                enableButtonTimeout = 3000
-                            } else if (amountWon >= 50 * scoreboard.bet){
-                                superGanhoScreen.show('mega', amountWon)
-                                enableButtonTimeout = 2000
-                            } else if (amountWon >= 25 * scoreboard.bet){
-                                superGanhoScreen.show('super', amountWon)
-                                enableButtonTimeout = 2000
-                            } else if(amountWon >= 10 * scoreboard.bet){
-                                superGanhoScreen.show('big', amountWon)
-                                enableButtonTimeout = 2000
-
-                            } else {
-                                showWinAmount()
-                                enableButtonTimeout = 500
-                            }
-
-                            if(x10){
-                                app.ticker.remove(x10Tick)
-                                x10Sprite.alpha = 1;
-                                let tick = () => {
-                                    x10Sprite.scale.x -= 0.1;
-                                    x10Sprite.scale.y -= 0.1;
-                                    if(x10Sprite.scale.x <= 0.5){
-                                        app.ticker.remove(tick)
-                                    }
+                                if(x10Sprite.alpha >= 1){
+                                    blink = false;
                                 }
-                                app.ticker.add(tick)
+                                if(x10Sprite.alpha <= 0){
+                                    blink = true;
+                                }
                             }
-                        }else{
-                            app.ticker.remove(x10Tick)
-                            x10Sprite.alpha = 0;
+                            app.ticker.add(x10Tick)
+                            config.until = 3000;
+                            config.speed = 30;
+                            config.x10 = true;
+                        } else {
+                            config.until = 0;
                         }
-                        setTimeout(() => {
-                                buttons.forEach((button) => button.setEnabled());
-                            }, enableButtonTimeout)
-                    }
+
+                        let swapSymbols = (data.symbols as string[][]).map((reel: Array<string>) => {
+                            return reel.map((texture) => {
+                                return symbols[texture]
+                            })
+                        })
+                        
+                        reels.swapTextures(swapSymbols)                    
+
+                        config.callback = () => {
+                            scoreboard.update(credits, scoreboard.bet, amountWon);
+                            while(scoreboard.credits < scoreboard.bet){
+                                decreaseBetHandler()
+                                if(scoreboard.bet === betOptions[0]){
+                                    break;
+                                }
+                            }
+                            let enableButtonTimeout = 0
+                            if(win){
+                                winAudio.play()
+                                reelsWinResult.show(data.winningLines,
+                                    data.amountPerLine, 
+                                    data.symbols as string[][], symbols)
+
+                                if (amountWon >= 100 * scoreboard.bet){
+                                    superGanhoScreen.show('ultra', amountWon)
+                                    enableButtonTimeout = 3000
+                                } else if (amountWon >= 50 * scoreboard.bet){
+                                    superGanhoScreen.show('mega', amountWon)
+                                    enableButtonTimeout = 2000
+                                } else if (amountWon >= 25 * scoreboard.bet){
+                                    superGanhoScreen.show('super', amountWon)
+                                    enableButtonTimeout = 2000
+                                } else if(amountWon >= 10 * scoreboard.bet){
+                                    superGanhoScreen.show('big', amountWon)
+                                    enableButtonTimeout = 2000
+
+                                } else {
+                                    showWinAmount()
+                                    enableButtonTimeout = 500
+                                }
+
+                                if(x10){
+                                    app.ticker.remove(x10Tick)
+                                    x10Sprite.alpha = 1;
+                                    let tick = () => {
+                                        x10Sprite.scale.x -= 0.1;
+                                        x10Sprite.scale.y -= 0.1;
+                                        if(x10Sprite.scale.x <= 0.5){
+                                            app.ticker.remove(tick)
+                                        }
+                                    }
+                                    app.ticker.add(tick)
+                                }
+                            }else{
+                                app.ticker.remove(x10Tick)
+                                x10Sprite.alpha = 0;
+                            }
+                            setTimeout(() => {
+                                    buttons.forEach((button) => button.setEnabled());
+                                }, enableButtonTimeout)
+                        }
+
+                    })
                     
                 }).catch((error) => {            
                     let message = error.response?.data?.code
