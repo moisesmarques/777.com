@@ -31,9 +31,18 @@ const formatMoney = (number: number) => `${new Intl.NumberFormat('pt-BR', {
   }).format(number*.01)}`;
 
 const formatTimeStampToDate = (timestamp: number) => {
-    const date = new Date(timestamp * 1000);
-    const formatted_date_time = date.toLocaleString();
-    return formatted_date_time;
+    const date = new Date(timestamp*1000);
+
+    // Get the date components (day, month, year, hours, minutes)
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Note: Months are 0-based, so add 1
+    const year = date.getFullYear();
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+
+    // Create the formatted string
+    const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
+    return formattedDate
 }
 
 const Withdraw = () => {
@@ -394,12 +403,14 @@ const Withdraw = () => {
                     <Box hidden={currentTab !== 3 || !userState.referrer}>
                         <Box sx={{display: 'flex', flexDirection: 'column', p: 1, gap: 2}}>
                             <h3>Indicações</h3>
-                            <p style={{color: '#e0e0e0'}}>Use seu código <span style={{color: '#ffcc00'}}>{userState.username}</span> para convidar novos usuários.</p>
+                            <p style={{color: '#e0e0e0'}}>Use seu código <span style={{color: '#ffcc00'}}>{userState.username}</span> para convidar novos usuários.
+                             Os usuários convidados receberão 25,00 de créditos gratuitos, e após fazerem o primeiro depósito você também receberá 25,00 de créditos.</p>
                             <Table sx={{ width: '100%'}} aria-label="simple table">
                                 <TableHead>
                                 <TableRow>
                                     <TableCell>Usuário</TableCell>
                                     <TableCell>Data</TableCell>
+                                    <TableCell>Depositou</TableCell>
                                 </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -410,6 +421,7 @@ const Withdraw = () => {
                                     >
                                         <TableCell>{row.username}</TableCell>
                                         <TableCell>{formatTimeStampToDate(row.referredAt)}</TableCell>
+                                        <TableCell>{row.deposited}</TableCell>
                                     </TableRow>
                                 ))}
                                 </TableBody>
