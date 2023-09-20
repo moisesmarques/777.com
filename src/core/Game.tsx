@@ -91,7 +91,7 @@ const Game = () => {
         // loading progress bar
         const loadingBar = new PIXI.Graphics();
         loadingBar.beginFill(0x000000);
-        loadingBar.drawRect(0, 0, 310, 20);
+        loadingBar.drawRect(0, 0, 206, 10);
         loadingBar.endFill();
         loadingBar.x = (app.screen.width - loadingBar.width) / 2;
         loadingBar.y = (app.screen.height - loadingBar.height) / 2;
@@ -99,22 +99,11 @@ const Game = () => {
 
         const loadingBarBg = new PIXI.Graphics();
         loadingBarBg.beginFill(0xffffff);
-        loadingBarBg.drawRect(0, 0, 300, 10);
+        loadingBarBg.drawRect(0, 0, 200, 4);
         loadingBarBg.endFill();
         loadingBarBg.x = (app.screen.width - loadingBarBg.width) / 2;
         loadingBarBg.y = (app.screen.height - loadingBarBg.height) / 2;
         app.stage.addChild(loadingBarBg);
-
-        const loadingText = new PIXI.Text('Carregando...', {
-            fontFamily: 'Verdana',
-            fontSize: 16,
-            fill: '#ffffff',
-            align: 'center'
-        });
-        loadingText.x = (app.screen.width - loadingText.width) / 2;
-        loadingText.y = (app.screen.height - loadingText.height) / 2 - 50;
-        app.stage.addChild(loadingText);
-
 
         loadingBarBg.scale.x = 0;
         let progressInterval = setInterval(() => {
