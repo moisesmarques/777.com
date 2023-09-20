@@ -90,7 +90,7 @@ export default createGlobalStyle`
     src: url(/assets/Goddess.ttf) format('truetype');    
   }
 
-  #main {
+  #game-container {
     background: url(/assets/loading-screen.png);
     background-attachment: fixed;
     background-position: top;
