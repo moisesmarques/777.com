@@ -71,6 +71,24 @@ const Login = () => {
                       placeholder="(99) 99999-9999"
                       {...register('phone', {
                         required: 'Digite seu número de celular',
+                        validate: (value) => {
+                          let number = value.replace(/\D/g, '')
+
+                          let invalidNumbers = [
+                            '00000000000',
+                            '99999999999',
+                            '88888888888',
+                            '77777777777',
+                            '66666666666',
+                            '55555555555',
+                            '44444444444',
+                            '33333333333',
+                            '22222222222',
+                            '11111111111',
+                          ]
+
+                          return !invalidNumbers.includes(number)
+                        }
                       })}
                     />
               </Box>
