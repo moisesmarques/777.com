@@ -90,6 +90,13 @@ export default createGlobalStyle`
     src: url(/assets/Goddess.ttf) format('truetype');    
   }
 
+  #main {
+    background: url(/assets/loading-screen.png);
+    background-attachment: fixed;
+    background-position: top;
+    background-repeat: no-repeat;
+  }
+
   #background {
     position: fixed;
     top: 0;
