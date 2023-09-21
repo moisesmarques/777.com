@@ -51,7 +51,7 @@ const Game = () => {
             height: 740,
             eventMode: 'passive',
             backgroundAlpha: 0,
-            antialias: true,
+            antialias: false,
             eventFeatures: {
                 move: true,
                 globalMove: false,
@@ -113,7 +113,8 @@ const Game = () => {
         }, 50)
 
         const winAudio = new Audio('../../assets/win.mp3');
-        const spinAudio = new Audio('../../assets/spin-.mp3')
+        const superWinAudio = new Audio('../../assets/super-win.mp3');
+        const spinAudio = new Audio('../../assets/spin-normal.mp3')
         
         let symbols = {} as any;
         let animatedSymbols = {} as any;
@@ -204,8 +205,6 @@ const Game = () => {
         .catch((error) => {})
 
         function init(){
-            winAudio.volume = 0.3;
-
             const bg = new PIXI.Sprite(assetsObj['background']);
             bg.x = app.screen.width / 2 - bg.width / 2;
             bg.y = app.screen.height / 2 - bg.height / 2;
@@ -403,7 +402,9 @@ const Game = () => {
 
                 reels.spin(config)
                 spinAudio.currentTime = 0;
+                spinAudio.playbackRate = 1
                 spinAudio.play()
+                
                 scoreboard.update(scoreboard.credits - scoreboard.bet, scoreboard.bet, scoreboard.won);
                 api.post('/game/spin', {
                     bet: scoreboard.bet
@@ -418,6 +419,8 @@ const Game = () => {
                         let  x10Tick = () => {}                    
 
                         if(x10){
+
+                            spinAudio.playbackRate = 1.5
                             let blink = true;
                             x10Sprite.scale.set(1);
 
@@ -460,28 +463,29 @@ const Game = () => {
                                 }
                             }
                             let enableButtonTimeout = 0
+                            spinAudio.pause()
+
                             if(win){
-                                winAudio.play()
                                 reelsWinResult.show(data.winningLines,
                                     data.amountPerLine, 
                                     data.symbols as string[][], symbols)
 
                                 if (amountWon >= 100 * scoreboard.bet){
-                                    superGanhoScreen.show('ultra', amountWon)
+                                    superGanhoScreen.show('ultra', amountWon, superWinAudio)
                                     enableButtonTimeout = 3000
                                 } else if (amountWon >= 50 * scoreboard.bet){
-                                    superGanhoScreen.show('mega', amountWon)
+                                    superGanhoScreen.show('mega', amountWon, superWinAudio)
                                     enableButtonTimeout = 2000
                                 } else if (amountWon >= 25 * scoreboard.bet){
-                                    superGanhoScreen.show('super', amountWon)
+                                    superGanhoScreen.show('super', amountWon, superWinAudio)
                                     enableButtonTimeout = 2000
                                 } else if(amountWon >= 10 * scoreboard.bet){
-                                    superGanhoScreen.show('big', amountWon)
+                                    superGanhoScreen.show('big', amountWon, superWinAudio)
                                     enableButtonTimeout = 2000
-
                                 } else {
                                     showWinAmount()
                                     enableButtonTimeout = 500
+                                    winAudio.play()
                                 }
 
                                 if(x10){

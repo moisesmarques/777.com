@@ -32,14 +32,15 @@ export default class SuperGanhoScreen {
         });
     }
 
-    show(type: 'big' | 'super' | 'mega' | 'ultra', amount: number) {
-        setTimeout(() => this.generate(this.app.screen.width, this.app.screen.height, type, amount), 500)        
+    show(type: 'big' | 'super' | 'mega' | 'ultra', amount: number, superWinAudio: HTMLAudioElement) {
+        setTimeout(() => this.generate(this.app.screen.width, this.app.screen.height, type, amount, superWinAudio), 500)        
     }
 
     private generate(appWidth: number, 
         appHeight: number,
         type: 'big' | 'super' | 'mega' | 'ultra',         
-        amount: number = 0) {
+        amount: number,
+        superWinAudio: HTMLAudioElement) {
 
         const stars = () => {
             var defaults = {
@@ -177,6 +178,8 @@ export default class SuperGanhoScreen {
 
         // animate textAmount until it reaches the final amount
         let startAmount = 0;
+        superWinAudio.currentTime = 0
+        superWinAudio.play()
         let tick = () => {
             textAmount.text = formatMoney(startAmount+= Math.random() * amount / 120);
             textAmount.x = (appWidth - textAmount.width) / 2;
@@ -184,6 +187,7 @@ export default class SuperGanhoScreen {
             if (startAmount >= amount) {                
                 textAmount.text = formatMoney(amount);
                 textAmount.x = (appWidth - textAmount.width) / 2;
+                superWinAudio.pause()
                 this.app.ticker.remove(tick)
             }
         }
