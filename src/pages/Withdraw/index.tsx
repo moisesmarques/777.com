@@ -284,7 +284,7 @@ const Withdraw = () => {
                         <h3 style={{marginTop: '20px'}}>Fortune Jaguar</h3>
                         <ul className='ul'>
                             <li>Fortune Jaguar is a 3-reel, 3-row video slot featuring respins and x10 multiplier.</li>
-                            <li>The game is played with 5 bet lines (fixed) and bet size of 0.10 to 0.90.</li>
+                            <li>The game is played with 5 bet lines (fixed) and bet size of 0.10 to 1.00.</li>
                             <li>The Bet Amount is set using the Bet Options screen or Minus and Plus buttons.</li>
                             <li>"Cash Wallet" displays the cash available for wager.</li>
                             <li>Winning combinations and payouts are made according to the "Paytable".</li>
@@ -308,8 +308,8 @@ const Withdraw = () => {
                         <h3>x10 Multiplier</h3>
                         <img src="/assets/x10.png" width="128"/>
                         <ul className='ul'>
-                            <li>When all symbols in the reels are involved in a win, the win will be multiplied by x10.</li>
-                            <li>Stand a chance to win up to 2500x of the total bet amount.</li>
+                            <li>Randomly the x10 multiplier will appear on the screen, all winnings will be multiplied by 10.</li>
+                            <li>Stand a chance to win up to 2500x of the bet amount.</li>
                         </ul>
                         <h3>Winning Bet Lines</h3>
                         <ol className='ul' style={{display: 'flex', flexWrap: 'wrap', gap: '40px', listStyle: 'decimal-leading-zero'}}>

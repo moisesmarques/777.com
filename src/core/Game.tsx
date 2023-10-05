@@ -339,7 +339,7 @@ const Game = () => {
             app.stage.addChild(exitBtn.sprite);
             buttons.push(exitBtn);
 
-            const betOptions = [50, 150, 500, 750, 1500, 2250, 4500]
+            const betOptions = [50, 150, 500]//, 750, 1500, 2250, 4500]
 
             const betSettings = new BetSettingsMenu(app, scoreboard, betOptions);
 
