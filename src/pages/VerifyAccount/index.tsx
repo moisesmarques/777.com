@@ -26,13 +26,13 @@ const VerifyAccount = () => {
   }).catch((error) => {
     let message = error.response?.data?.code
     if (message === 'INVALID_OTP')
-      toast.error('Código de verificação inválido')
+      toast.error('Invalid code')
     else
       toast.error(error.response?.data?.code || 'Ops...')
   })
 
   const sendOtp = () => signin({ phone: userState.phone}).then(() => {
-    toast.info('Código reenviado com sucesso')
+    toast.info('Code sent')
   }).catch((error) => {
     toast.error(error.response?.data?.code || 'Ops...')
   })
@@ -51,28 +51,28 @@ const VerifyAccount = () => {
           <img src="/assets/logo-360.png" alt="Logo" width="360" height="360"/>
         </Box>
         <Box sx={{pl: 4, pr: 4}}>
-          <h4>Verificar conta</h4>
+          <h4>Verify account</h4>
           <form onSubmit={handleSubmit(data => verify(data))}>
             <Box sx={{display: 'flex', flexDirection: 'column'}}>
               <TextField
-                  label="Código de verificação"
+                  label="Verification code"
                   maxLength={6}
                   placeholder="******"
                   variant="outlined"
                   error={!!errors.code}
                   {...register('code', { 
-                    required: 'Digite o código recebido por SMS',
+                    required: "The code is required",
                   })}
                 />
             </Box>
             <Box sx={{display: 'flex', flexDirection: 'column', mt: 2}}>
-              <Button sx={{ width: '100%'}} variant="contained" type="submit">Verificar</Button>
+              <Button sx={{ width: '100%'}} variant="contained" type="submit">Verify</Button>
           </Box>            
           </form>
           <Box sx={{display: 'flex', flexDirection: 'column', mt: 3}}>
-            <p style={{textAlign: 'center'}}>Ainda não recebeu o código?</p>
+            <p style={{textAlign: 'center'}}>Didn't receive the code?</p>
             <Button onClick={() => sendOtp()} type="button">
-              Reenviar o código
+              Send again
             </Button>
           </Box>
         </Box>

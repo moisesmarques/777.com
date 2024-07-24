@@ -3,13 +3,13 @@ import React, { useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { signin } from "../../services/userService";
-import { Box, Button, Container, TextField } from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 import { UserContext, UserState } from "../../App";
-
-const countryCode = '+55'
+import CountrySelect, { countries } from "../../components/CountrySelect";
 
 export type LoginTypeForm = {
   phone: string;
+  countryCode: string;
 }
 
 const Login = () => {
@@ -29,7 +29,9 @@ const Login = () => {
 
   const { mutate } = useMutation({
     mutationFn: (values: LoginTypeForm) => {
-      let phone = countryCode + values.phone.replace(/\D/g, '')
+
+      let countryCodeValue = countries.find((country) => country.value === values.countryCode)?.code;
+      let phone =countryCodeValue + values.phone.replace(/\D/g, '')
       userState.set({phone} as UserState);
       return signin({phone})
     },
@@ -59,18 +61,21 @@ const Login = () => {
           <img src="/assets/logo-360.png" alt="Logo" width="360" height="360"/>
         </Box>
         <Box sx={{pl: 4, pr: 4}}>
-          <h4>Log in</h4>
+          <h4>Login</h4>
           <form onSubmit={handleSubmit( data => mutate(data))}>
-            <Box sx={{display: 'flex', flexDirection: 'column'}}>
+            <Box sx={{display: 'flex', flexDirection: 'column', gap: 1}}>
+            <CountrySelect defaultValue={'US'} onChange={
+                            (e, newValue) => setValue('countryCode', newValue?.value || 'US')
+                        } />
               <TextField
                       variant="outlined"
-                      label="Celular"
+                      label="Phone"
                       id="phone"
                       error={!!errors.phone}
                       helperText={errors.phone?.message}
-                      placeholder="(99) 99999-9999"
+                      placeholder="Type your phone number"
                       {...register('phone', {
-                        required: 'Digite seu número de celular',
+                        required: 'Phone is required',
                         validate: (value) => {
                           let number = value.replace(/\D/g, '')
 
@@ -93,7 +98,7 @@ const Login = () => {
                     />
               </Box>
               <Box sx={{display: 'flex', flexDirection: 'column', mt: 2}}>
-                <Button sx={{ width: '100%'}} variant="contained" type="submit">Entrar</Button>
+                <Button sx={{ width: '100%'}} variant="contained" type="submit">Login</Button>
               </Box>
           </form>
         </Box>

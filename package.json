@@ -2,6 +2,12 @@
   "name": "777-london",
   "version": "0.1.0",
   "private": true,
+  "author": {
+    "name": "Moises Marques da Silva",
+    "email": "moisesmarques.ti@hotmail.com",
+    "url": "https://github.com/moisesmarques/777.com",
+    "release": "2023-12-01"
+  },
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
